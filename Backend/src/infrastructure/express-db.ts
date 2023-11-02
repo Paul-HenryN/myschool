@@ -31,7 +31,7 @@ export class ExpressDb {
 
         this.connection.query(query, (err, rows, fields) => {
             if (err) throw err;
-            console.log(rows[0].solution);
+            console.log(rows);
         });
 
         this.connection.end();

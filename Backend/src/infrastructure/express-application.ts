@@ -28,7 +28,7 @@ export class ExpressApplication {
         this.configureDb();
         this.configureServer();
 
-        this.expressDb.executeQuery('SELECT 1 + 1 AS solution');
+        this.expressDb.executeQuery('SELECT * from notes');
     }
 
     private configureEnvironment(): void {

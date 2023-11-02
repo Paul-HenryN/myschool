@@ -1,9 +1,14 @@
-import { ExpressServer } from "./express-server";
+import { ExpressRouter } from './express-router';
+import { ExpressServer } from './express-server';
+import { UserService } from '../user/user.service';
+import { UserDataService } from '../user/user.data-service';
 import * as dotenv from 'dotenv';
+
 export class ExpressApplication {
+    private expressRouter!: ExpressRouter;
     private port!: string;
     private server!: ExpressServer;
-
+    private userService!: UserService;
 
     constructor() {
         this.configureApplication();
@@ -16,14 +21,14 @@ export class ExpressApplication {
     private configureApplication(): void {
         this.configureEnvironment();
         this.configureServerPort();
+        this.configureServices();
+        this.configureExpressRouter();
         this.configureServer();
-
-    } 
-
+    }
 
     private configureEnvironment(): void {
         dotenv.config({
-            path: '.env'
+            path: '.env',
         });
     }
 
@@ -31,8 +36,16 @@ export class ExpressApplication {
         this.port = this.getPort();
     }
 
+    private configureServices(): void {
+        this.userService = new UserDataService();
+    }
+
+    private configureExpressRouter(): void {
+        this.expressRouter = new ExpressRouter(this.userService);
+    }
+
     private configureServer(): void {
-        this.server = new ExpressServer(this.port);
+        this.server = new ExpressServer(this.expressRouter, this.port);
     }
 
     private getPort(): string {

@@ -3,9 +3,11 @@ import { ExpressServer } from './express-server';
 import { UserService } from '../user/user.service';
 import { UserDataService } from '../user/user.data-service';
 import * as dotenv from 'dotenv';
+import { ExpressDb } from './express-db';
 
 export class ExpressApplication {
     private expressRouter!: ExpressRouter;
+    private expressDb!: ExpressDb;
     private port!: string;
     private server!: ExpressServer;
     private userService!: UserService;
@@ -23,7 +25,10 @@ export class ExpressApplication {
         this.configureServerPort();
         this.configureServices();
         this.configureExpressRouter();
+        this.configureDb();
         this.configureServer();
+
+        this.expressDb.executeQuery('SELECT 1 + 1 AS solution');
     }
 
     private configureEnvironment(): void {
@@ -57,5 +62,12 @@ export class ExpressApplication {
         return port;
     }
 
-    
+    private configureDb(): void {
+        const host = process.env.HOST;
+        const user = process.env.USER;
+        const password = process.env.PASSWORD;
+        const database = process.env.DATABASE;
+
+        this.expressDb = new ExpressDb(host!, user!, password!, database!);
+    }
 }

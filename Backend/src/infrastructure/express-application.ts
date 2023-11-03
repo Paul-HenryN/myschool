@@ -4,6 +4,11 @@ import { UserService } from '../user/user.service';
 import { UserDataService } from '../user/user.data-service';
 import * as dotenv from 'dotenv';
 import { ExpressDb } from './express-db';
+import { TeacherDataService } from '../teacher/teacher.data-service';
+import { StudentService } from '../student/student.service';
+import { StudentDataService } from '../student/student.data-service';
+import { GradeService } from '../grade/grade.service';
+import { GradeDataService } from '../grade/grade.data-service';
 
 export class ExpressApplication {
     private expressRouter!: ExpressRouter;
@@ -11,6 +16,9 @@ export class ExpressApplication {
     private port!: string;
     private server!: ExpressServer;
     private userService!: UserService;
+    private teacherService! : TeacherDataService;
+    private studentService! : StudentService;
+    private gradeService! : GradeService;
 
     constructor() {
         this.configureApplication();
@@ -43,10 +51,13 @@ export class ExpressApplication {
 
     private configureServices(): void {
         this.userService = new UserDataService();
+        this.teacherService = new TeacherDataService();
+        this.studentService = new StudentDataService();
+        this.gradeService = new GradeDataService();
     }
 
     private configureExpressRouter(): void {
-        this.expressRouter = new ExpressRouter(this.userService);
+        this.expressRouter = new ExpressRouter(this.userService, this.teacherService, this.studentService, this.gradeService);
     }
 
     private configureServer(): void {

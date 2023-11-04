@@ -20,7 +20,7 @@ export class TeacherRouter {
             }
         });
 
-        this.router.post('/add-user', (req, res, next) => {
+        this.router.post('/add-teacher', (req, res, next) => {
             try {
                 const result = this.teacherController.add(req.body.username);
                 res.status(200).json(result);

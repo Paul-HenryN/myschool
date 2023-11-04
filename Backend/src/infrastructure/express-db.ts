@@ -1,8 +1,7 @@
 import mysql, { Connection } from 'mysql';
-import { Teacher } from '../teacher/teacher';
 
 export class ExpressDb {
-    private static connection: Connection;
+    public static connection: Connection;
 
     constructor(
         host: string,
@@ -25,18 +24,5 @@ export class ExpressDb {
             password: password,
             database: database,
         });
-    }
-
-    static insertTeacher(username: string): void {
-        try {
-            const query = `INSERT INTO professeur VALUES(${username})`;
-            this.connection.connect();
-
-            this.connection.query(query, (err, rows, fiels) => {
-                console.log(rows);
-            });
-        } catch (e) {
-            console.error(e);
-        }
     }
 }

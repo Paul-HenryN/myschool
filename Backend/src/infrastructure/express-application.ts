@@ -9,6 +9,7 @@ import { StudentService } from '../student/student.service';
 import { StudentDataService } from '../student/student.data-service';
 import { GradeService } from '../grade/grade.service';
 import { GradeDataService } from '../grade/grade.data-service';
+import { TeacherService } from '../teacher/teacher.service';
 
 export class ExpressApplication {
     private expressRouter!: ExpressRouter;
@@ -16,9 +17,9 @@ export class ExpressApplication {
     private port!: string;
     private server!: ExpressServer;
     private userService!: UserService;
-    private teacherService! : TeacherDataService;
-    private studentService! : StudentService;
-    private gradeService! : GradeService;
+    private teacherService!: TeacherService;
+    private studentService!: StudentService;
+    private gradeService!: GradeService;
 
     constructor() {
         this.configureApplication();
@@ -35,8 +36,6 @@ export class ExpressApplication {
         this.configureExpressRouter();
         this.configureDb();
         this.configureServer();
-
-        this.expressDb.executeQuery('SELECT * from notes');
     }
 
     private configureEnvironment(): void {
@@ -57,7 +56,12 @@ export class ExpressApplication {
     }
 
     private configureExpressRouter(): void {
-        this.expressRouter = new ExpressRouter(this.userService, this.teacherService, this.studentService, this.gradeService);
+        this.expressRouter = new ExpressRouter(
+            this.userService,
+            this.teacherService,
+            this.studentService,
+            this.gradeService,
+        );
     }
 
     private configureServer(): void {

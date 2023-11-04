@@ -3,7 +3,7 @@ import { TeacherService } from './teacher.service';
 
 export class TeacherDataService implements TeacherService {
     add(username: string): Teacher {
-        throw new Error('Method not implemented.');
+        throw new Error('Method not yet implemented.');
     }
     getById(id: number): Teacher | null {
         throw new Error('Method not implemented.');

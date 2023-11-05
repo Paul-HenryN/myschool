@@ -4,11 +4,11 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private userService: UserService) {}
 
-    add(username: string): User {
+    add(name: string, email: string, password: string): Promise<User> {
         // is the username empty ?
         // is the username whitespaced ?
         // other checks...
-        return this.userService.add(username);
+        return this.userService.add(name, email, password);
     }
 
     getById(id: number): User | null {

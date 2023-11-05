@@ -1,7 +1,7 @@
 import mysql, { Connection } from 'mysql';
 
 export class ExpressDb {
-    public static connection: Connection;
+    private static connection: Connection;
 
     constructor(
         host: string,
@@ -24,5 +24,11 @@ export class ExpressDb {
             password: password,
             database: database,
         });
+    }
+
+    static execute(query: string) {
+        this.connection.connect();
+        this.connection.query(query);
+        this.connection.end();
     }
 }

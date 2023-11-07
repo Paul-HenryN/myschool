@@ -5,6 +5,9 @@ import bcrypt from 'bcrypt';
 
 
 export class UserDataService implements UserService {
+    getById(id: number): User | null {
+        throw new Error('Method not implemented.');
+    }
     async add(name: string, email: string, password: string): Promise<User> {
         try {
             const hashedPassword = await this.hashPassword(password); 
@@ -24,9 +27,11 @@ export class UserDataService implements UserService {
             throw error;
         }
     }
-    getById(id: number): User | null {
+
+    async getAll(): Promise<User[] | null> {
         throw new Error('Method not implemented.');
     }
+
     delete(id: number): void {
         throw new Error('Method not implemented.');
     }

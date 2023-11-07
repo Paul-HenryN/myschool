@@ -11,11 +11,11 @@ export class UserController {
         return this.userService.add(name, email, password);
     }
 
-    getById(id: number): User | null {
+    getAll(): Promise<User[] | null> {
         // is the id a decimal ?
         // is the id a negative number ?
         // other checks...
-        return this.userService.getById(id);
+        return this.userService.getAll();
     }
 
     delete(id: number): void {

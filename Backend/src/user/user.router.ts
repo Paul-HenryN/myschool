@@ -28,9 +28,9 @@ export class UserRouter {
             }
         });
 
-        this.router.delete('/:id', (req, res, next) => {
+        this.router.delete('/:email', async (req, res, next) => {
             try {
-                this.userController.delete(parseInt(req.params.id));
+                await this.userController.delete(req.params.email);
                 res.status(200).json();
             } catch (error: unknown) {
                 next(error);

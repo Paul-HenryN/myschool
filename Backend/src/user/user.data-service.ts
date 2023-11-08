@@ -27,7 +27,7 @@ export class UserDataService implements UserService {
         }
     }
 
-    async getAll(): Promise<String[]> {
+    async getAll(): Promise<String[] | null> {
         const query = `SELECT email FROM admins`;
   
         try {
@@ -40,7 +40,7 @@ export class UserDataService implements UserService {
                 return emails;
             } else {
                 console.log('PAS d\'email');
-                return [];
+                return null;
             }
         } catch (error) {
             console.error('Erreur lors de la récupération des adresses e-mail des utilisateurs. ', error);
@@ -48,8 +48,21 @@ export class UserDataService implements UserService {
         }
     }
 
-    delete(id: number): void {
-        throw new Error('Method not implemented.');
+    async delete(email: string): Promise<string> {
+        const query = `DELETE FROM admins WHERE email = '${email}'`;
+
+        try {
+            const result = await ExpressDb.execute(query);
+      
+            if (result.affectedRows > 0) {
+                return 'User deleted successfully';
+            } else {
+                return 'User does\'nt exist';
+            }
+        } catch (error) {
+            console.error('Erreur lors de la vérification et de la suppression de l\'e-mail :', error);
+            throw error;
+        }
     }
 
     private async hashPassword(password: string): Promise<string> {

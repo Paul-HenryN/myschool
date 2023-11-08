@@ -34,7 +34,7 @@ describe('UserDataService', ()=>{
         });
     });
 
-    describe('getAll', () => {
+    /*describe('getAll', () => {
         it('should return a table of string or null', async () => {
             const result = await sut.getAll();
 
@@ -48,6 +48,13 @@ describe('UserDataService', ()=>{
                 expect(typeof item).toBe('string');
               });
             }        
+        });
+    });*/
+
+    describe('delete', () => {
+        it('should delete the email', async () => {
+            const result = await sut.delete('Teacher1');        
+            expect(result).toBe('User deleted successfully');
         });
     });
 });

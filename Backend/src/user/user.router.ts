@@ -19,12 +19,12 @@ export class UserRouter {
             }
         });
 
-        this.router.get('/', (req, res, next) => {
+        this.router.get('/', async (req, res, next) => {
             try {
-                const result = this.userController.getAll();
-                res.status(200).json(result);
+              const result = await this.userController.getAll();
+              res.status(200).json(result);
             } catch (error) {
-                next(error);
+              next(error);
             }
         });
 

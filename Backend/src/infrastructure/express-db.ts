@@ -26,9 +26,17 @@ export class ExpressDb {
         });
     }
 
-    static execute(query: string) {
-        this.connection.connect();
-        this.connection.query(query);
-        this.connection.end();
+    static execute(query: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+          this.connection.connect();
+          this.connection.query(query, (error, results) => {
+            if (error) {
+              reject(error); // En cas d'erreur, rejet de la promesse
+            } else {
+              resolve(results); // En cas de succès, résolution de la promesse avec les résultats
+            }
+            this.connection.end();
+          });
+        });
     }
 }

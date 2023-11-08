@@ -11,7 +11,7 @@ export class UserController {
         return this.userService.add(name, email, password);
     }
 
-    getAll(): Promise<User[] | null> {
+    getAll(): Promise<String[]> {
         // is the id a decimal ?
         // is the id a negative number ?
         // other checks...

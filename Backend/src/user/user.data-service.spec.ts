@@ -34,5 +34,20 @@ describe('UserDataService', ()=>{
         });
     });
 
-    
+    describe('getAll', () => {
+        it('should return a table of string or null', async () => {
+            const result = await sut.getAll();
+
+            // Vérification des résultats
+            if (result === null) {
+              expect(result).toBeNull(); // Vérifie si le résultat est nul
+            } else {
+              expect(Array.isArray(result)).toBe(true); // Vérifie si le résultat est un tableau
+              // Vérifie si chaque élément du tableau est une chaîne de caractères
+              result.forEach(item => {
+                expect(typeof item).toBe('string');
+              });
+            }        
+        });
+    });
 });

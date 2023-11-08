@@ -1,3 +1,4 @@
+import { query } from 'express';
 import { ExpressDb } from '../infrastructure/express-db';
 import { User } from './user';
 import { UserService } from './user.service';
@@ -5,9 +6,7 @@ import bcrypt from 'bcrypt';
 
 
 export class UserDataService implements UserService {
-    getById(id: number): User | null {
-        throw new Error('Method not implemented.');
-    }
+    
     async add(name: string, email: string, password: string): Promise<User> {
         try {
             const hashedPassword = await this.hashPassword(password); 
@@ -28,8 +27,25 @@ export class UserDataService implements UserService {
         }
     }
 
-    async getAll(): Promise<User[] | null> {
-        throw new Error('Method not implemented.');
+    async getAll(): Promise<String[]> {
+        const query = `SELECT email FROM admins`;
+  
+        try {
+            const result = await ExpressDb.execute(query); // Attend la résolution de la promesse
+
+            if (result !== null) {
+                console.log(result);
+                console.log('OK email');
+                const emails = result.rows;
+                return emails;
+            } else {
+                console.log('PAS d\'email');
+                return [];
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération des adresses e-mail des utilisateurs. ', error);
+            throw error;
+        }
     }
 
     delete(id: number): void {

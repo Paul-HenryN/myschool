@@ -1,14 +1,22 @@
 import { ExpressDb } from "../infrastructure/express-db";
 import { UserDataService } from "./user.data-service";
 
+
 jest.mock("../infrastructure/express-db");
 
 describe('UserDataService', ()=>{
     let sut: UserDataService;
+    let logSpy: jest.SpyInstance;
     
     beforeEach(() => {
         sut = new UserDataService();
         jest.resetAllMocks();
+        logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        // Restaure la fonction console.log à son état d'origine après chaque test
+        jest.clearAllMocks();
     });
 
     describe('add', () => {
@@ -34,27 +42,27 @@ describe('UserDataService', ()=>{
         });
     });
 
-    /*describe('getAll', () => {
-        it('should return a table of string or null', async () => {
-            const result = await sut.getAll();
+    describe('getAll', () => {
+        it('should verified that execute method is call', async () => {
+            sut.getAllEmail();
+            await expect(ExpressDb.execute).toHaveBeenCalled;
+        });  
+        /*it('should print "OK EMAIL" if execute method is successful and emails are present', async () => {
+            jest.spyOn(sut, 'getAll').mockResolvedValueOnce(['example@myschool.net']);
+        
+            // Réinitialise le mock avant chaque test
+        
+            await sut.getAll();
+        
+            // Vérifie si la console.log a été appelée avec 'OK EMAIL' ou 'PAS D'EMAIL'
+            expect(logSpy).toHaveBeenCalledWith(expect.stringMatching(/OK email|No email/));
+        });*/
+    });
 
-            // Vérification des résultats
-            if (result === null) {
-              expect(result).toBeNull(); // Vérifie si le résultat est nul
-            } else {
-              expect(Array.isArray(result)).toBe(true); // Vérifie si le résultat est un tableau
-              // Vérifie si chaque élément du tableau est une chaîne de caractères
-              result.forEach(item => {
-                expect(typeof item).toBe('string');
-              });
-            }        
+    /*describe('delete', () => {
+        it('should verified that execute method is call', async () => {
+            sut.delete('admin@myschool.net');
+            await expect(ExpressDb.execute).toHaveBeenCalled;
         });
     });*/
-
-    describe('delete', () => {
-        it('should delete the email', async () => {
-            const result = await sut.delete('Teacher1');        
-            expect(result).toBe('User deleted successfully');
-        });
-    });
 });

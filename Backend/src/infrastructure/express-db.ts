@@ -1,4 +1,4 @@
-import mysql, { Connection } from 'mysql';
+/*import mysql, { Connection } from 'mysql';
 
 export class ExpressDb {
     private static connection: Connection;
@@ -39,4 +39,59 @@ export class ExpressDb {
           });
         });
     }
+}*/
+
+import mysql, { Pool } from 'mysql';
+
+export class ExpressDb {
+
+    private static pool: Pool;
+
+    constructor(
+      private host: string,
+      private user: string,
+      private password: string,
+      private database: string,
+    ) {
+      ExpressDb.pool = mysql.createPool({
+        host: this.host,
+        user: this.user,
+        password: this.password,
+        database: this.database,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+      });
+    }
+    /*private static pool = mysql.createPool({
+        host: 'localhost',
+        user: 'your_user',
+        password: 'your_password',
+        database: 'your_database',
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+    });*/
+
+    static execute(query: string, values?: any[]): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.pool.getConnection((err, connection) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                connection.query(query, values, (error, results) => {
+                    connection.release();
+
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(results);
+                    }
+                });
+            });
+        });
+    }
 }
+

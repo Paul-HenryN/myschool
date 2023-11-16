@@ -11,11 +11,18 @@ export class UserController {
         return this.userService.add(name, email, password);
     }
 
-    getAll(): Promise<String[] | null> {
+    updatePassword(email: string, password: string): Promise<User | null> {
+        // is the username empty ?
+        // is the username whitespaced ?
+        // other checks...
+        return this.userService.updatePassword(email, password);
+    }
+    
+    getAllEmail(): Promise<String[] | null> {
         // is the id a decimal ?
         // is the id a negative number ?
         // other checks...
-        return this.userService.getAll();
+        return this.userService.getAllEmail();
     }
 
     delete(email: string): Promise<string> {

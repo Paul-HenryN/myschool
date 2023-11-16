@@ -10,10 +10,19 @@ export class UserRouter {
 
     private configureRoutes(): void {
 
-        this.router.post('/add-user', (req, res, next) => {
+        this.router.post('/add-user', async (req, res, next) => {
             try {
-                const result = this.userController.add(req.body.name, req.body.email, req.body.password);
-                res.status(200).json(result);
+                await this.userController.add(req.body.name, req.body.email, req.body.password);
+                res.status(200).json();
+            } catch (error: unknown) {
+                next(error);
+            }
+        });
+
+        this.router.put('/:email', async (req, res, next) => {
+            try {
+                await this.userController.updatePassword(req.params.email, req.body.password);;
+                res.status(200).json();
             } catch (error: unknown) {
                 next(error);
             }
@@ -21,7 +30,7 @@ export class UserRouter {
 
         this.router.get('/', async (req, res, next) => {
             try {
-              const result = await this.userController.getAll();
+              const result = await this.userController.getAllEmail();
               res.status(200).json(result);
             } catch (error) {
               next(error);

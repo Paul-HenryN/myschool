@@ -13,33 +13,58 @@ export class UserDataService implements UserService {
             // install bcrypt to crypt password
 
             const user = {name: name, email: email, password: hashedPassword};
-
             const query = `INSERT INTO admins (name, email, password) VALUES ('${name}', '${email}', '${hashedPassword}')`;
-
             const result = await ExpressDb.execute(query);
 
-            console.log('Utilisateur ajouté avec succès');
-
+            console.log('User successfully added');
             return user;
         } catch (error) {
-            console.error('Erreur lors de l\'insertion de l\'utilisateur. ');
+            console.error('Error when inserting user.');
             throw error;
         }
     }
 
-    async getAll(): Promise<String[] | null> {
-        const query = `SELECT email FROM admins`;
-  
+    async updatePassword(email: string, newPassword: string): Promise<User | null> {
         try {
-            const result = await ExpressDb.execute(query); // Attend la résolution de la promesse
+            // Hash the new password
+            const hashedPassword = await this.hashPassword(newPassword);
+    
+            // Update the user with the new password based on the email
+            const query = `UPDATE admins SET password = ? WHERE email = ?`;
+            const result = await ExpressDb.execute(query, [hashedPassword, email]);
+    
+            // Check if any rows were affected, indicating a successful update
+            if (result.affectedRows > 0) {
+                // Return an object with the updated email
+                const updatedUser: User = { name: '', email: email, password: hashedPassword };
+                console.log('Update OK');
+                return updatedUser;
+            } else {
+                // No rows were affected, indicating that the user with the given email doesn't exist
+                console.log('User not found');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error updating user password:', error);
+            throw error;
+        }
+    }
+    
+    
 
-            if (result !== null) {
-                console.log(result);
+    async getAllEmail(): Promise<String[] | null> {
+        const query = `SELECT email FROM admins`;
+    
+        try {
+            const result = await ExpressDb.execute(query);
+    
+            if (result && Array.isArray(result)) {
                 console.log('OK email');
-                const emails = result.rows;
+                console.log(result);
+                const emails = result.map((row: any) => row.email);
                 return emails;
             } else {
-                console.log('PAS d\'email');
+                console.log('No email');
                 return null;
             }
         } catch (error) {
@@ -47,6 +72,7 @@ export class UserDataService implements UserService {
             throw error;
         }
     }
+    
 
     async delete(email: string): Promise<string> {
         const query = `DELETE FROM admins WHERE email = '${email}'`;
@@ -56,11 +82,10 @@ export class UserDataService implements UserService {
       
             if (result.affectedRows > 0) {
                 return 'User deleted successfully';
-            } else {
-                return 'User does\'nt exist';
             }
+            return 'User does\'nt exist';
         } catch (error) {
-            console.error('Erreur lors de la vérification et de la suppression de l\'e-mail :', error);
+            console.error('Error checking and deleting e-mail :', error);
             throw error;
         }
     }
@@ -68,4 +93,5 @@ export class UserDataService implements UserService {
     private async hashPassword(password: string): Promise<string> {
         return bcrypt.hash(password, 10); 
     }
+    
 }

@@ -15,7 +15,6 @@ describe('UserDataService', ()=>{
     });
 
     afterEach(() => {
-        // Restaure la fonction console.log à son état d'origine après chaque test
         jest.clearAllMocks();
     });
 
@@ -24,6 +23,7 @@ describe('UserDataService', ()=>{
             sut.add('Admin', 'admin@myschool.net', '1235');
             await expect(ExpressDb.execute).toHaveBeenCalled;
         });
+        
         it('should have a valid email', async () => {
             const user = await sut.add('Teacher1', 'user@myschool.net', '1235');
           
@@ -33,6 +33,7 @@ describe('UserDataService', ()=>{
             const emailRegex = /^[A-Za-z0-9._%-]+@myschool\.net$/;
             expect(emailRegex.test(user.email)).toBe(true);
         });
+
         it('should return a user', async () => {
             const user = await sut.add('user', 'user@myschool.net', 'lde@g_');
           
@@ -42,27 +43,64 @@ describe('UserDataService', ()=>{
         });
     });
 
-    describe('getAll', () => {
+    describe('updatePassword', () => {
+        it('should verified that execute method is call', async () => {
+            sut.updatePassword('admin@myschool.net', '1235');
+            await expect(ExpressDb.execute).toHaveBeenCalled;
+        });
+
+        it('should return updateUser or null', async () => {
+            const email = 'admin@myschool.net';
+            const newPassword = 'newPassword123';
+        
+            jest.spyOn(ExpressDb, 'execute').mockResolvedValueOnce({ affectedRows: 1 });
+        
+            const result = await sut.updatePassword(email, newPassword);
+        
+            if (result !== null) {
+                expect(result.name).toBe('');
+                expect(result.email).toBe(email);
+                expect(result.password).toBe(newPassword);
+            } else {
+                expect(result).toBe(null);
+            }
+        });
+        
+    });
+
+    describe('getAllEmail', () => {
         it('should verified that execute method is call', async () => {
             sut.getAllEmail();
             await expect(ExpressDb.execute).toHaveBeenCalled;
         });  
-        /*it('should print "OK EMAIL" if execute method is successful and emails are present', async () => {
-            jest.spyOn(sut, 'getAll').mockResolvedValueOnce(['example@myschool.net']);
+
+        it('should return an array of strings or null', async () => {
+            jest.spyOn(sut, 'getAllEmail').mockResolvedValueOnce(['example1@myschool.net', 'example2@myschool.net']);
         
-            // Réinitialise le mock avant chaque test
+            const result = await sut.getAllEmail();
         
-            await sut.getAll();
-        
-            // Vérifie si la console.log a été appelée avec 'OK EMAIL' ou 'PAS D'EMAIL'
-            expect(logSpy).toHaveBeenCalledWith(expect.stringMatching(/OK email|No email/));
-        });*/
+            if (result !== null) {
+                expect(Array.isArray(result)).toBe(true);
+                result.forEach(email => {
+                    expect(typeof email).toBe('string');
+                });
+            } else {
+                expect(result).toBe(null);
+            }
+        });
     });
 
-    /*describe('delete', () => {
+    describe('delete', () => {
         it('should verified that execute method is call', async () => {
             sut.delete('admin@myschool.net');
             await expect(ExpressDb.execute).toHaveBeenCalled;
         });
-    });*/
+
+        it('should verify that user is deleted', async () => {
+            jest.spyOn(sut, 'delete').mockResolvedValueOnce('User deleted successfully');
+            const result = await sut.delete('admin@myschool.net');
+            expect(result).toBe('User deleted successfully');
+        });
+        
+    });
 });

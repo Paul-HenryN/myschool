@@ -26,21 +26,16 @@ export class UserDataService implements UserService {
 
     async updatePassword(email: string, newPassword: string): Promise<User | null> {
         try {
-            // Hash the new password
             const hashedPassword = await this.hashPassword(newPassword);
     
-            // Update the user with the new password based on the email
             const query = `UPDATE admins SET password = ? WHERE email = ?`;
             const result = await ExpressDb.execute(query, [hashedPassword, email]);
     
-            // Check if any rows were affected, indicating a successful update
-            if (result.affectedRows > 0) {
-                // Return an object with the updated email
-                const updatedUser: User = { name: '', email: email, password: hashedPassword };
+            if (result && result.affectedRows !== undefined && result.affectedRows > 0) {
                 console.log('Update OK');
+                const updatedUser: User = { name: '', email: email, password: hashedPassword };
                 return updatedUser;
             } else {
-                // No rows were affected, indicating that the user with the given email doesn't exist
                 console.log('User not found');
                 return null;
             }
@@ -50,8 +45,6 @@ export class UserDataService implements UserService {
         }
     }
     
-    
-
     async getAllEmail(): Promise<String[] | null> {
         const query = `SELECT email FROM admins`;
     
@@ -73,14 +66,13 @@ export class UserDataService implements UserService {
         }
     }
     
-
     async delete(email: string): Promise<string> {
         const query = `DELETE FROM admins WHERE email = '${email}'`;
 
         try {
             const result = await ExpressDb.execute(query);
       
-            if (result.affectedRows > 0) {
+            if (result && result.affectedRows !== undefined && result.affectedRows > 0) {
                 return 'User deleted successfully';
             }
             return 'User does\'nt exist';

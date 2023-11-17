@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import { query } from 'express';
 import { ExpressDb } from '../infrastructure/express-db';
 import { User } from './user';
@@ -80,6 +81,43 @@ export class UserDataService implements UserService {
             console.error('Error checking and deleting e-mail :', error);
             throw error;
         }
+    }
+
+    async login(email: string, password: string): Promise<string | null> {
+        try {
+          const query = `SELECT * FROM admins WHERE email = ?`;
+          const result = await ExpressDb.execute(query, [email]);
+    
+          if (result && Array.isArray(result) && result.length > 0) {
+            const user: User = result[0];
+    
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+    
+            if (isPasswordValid) {
+              const token = jwt.sign({ email: user.email }, 'your-secret-key', { expiresIn: '1h' });
+              return token;
+            } else {
+              return null;
+            }
+          } else {
+            return null;
+          }
+        } catch (error) {
+          console.error('Error authenticating user:', error);
+          throw error;
+        }
+    }
+
+    async getByEmail(email: string): Promise<User | null> {
+        const query = 'SELECT * FROM admins WHERE email = ?';
+        const result = await ExpressDb.execute(query, [email]);
+
+        // Vérifiez si un utilisateur a été trouvé
+        if (result && Array.isArray(result) && result.length > 0) {
+            return result[0]; // Retourne le premier utilisateur trouvé
+        }
+
+        return null; // Aucun utilisateur trouvé avec cet email
     }
 
     private async hashPassword(password: string): Promise<string> {

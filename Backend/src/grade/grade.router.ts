@@ -20,9 +20,10 @@ export class GradeRouter {
             }
         });
 
-        this.router.post('/add-user', (req, res, next) => {
+        this.router.post('/add', (req, res, next) => {
             try {
-                const result = this.gradeController.add(req.body.username);
+                const { id_student, id_subject, id_teacher, value } = req.body;
+                const result = this.gradeController.add(id_student, id_subject, id_teacher, value);
                 res.status(200).json(result);
             } catch (error: unknown) {
                 next(error);

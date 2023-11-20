@@ -4,11 +4,11 @@ import { GradeService } from './grade.service';
 export class GradeController {
     constructor(private gradeService: GradeService) {}
 
-    add(username: string): Grade {
+    add(id_student: number, id_subject: number, id_teacher: number, value: number): Grade {
         // is the username empty ?
         // is the username whitespaced ?
         // other checks...
-        return this.gradeService.add(username);
+        return this.gradeService.add(id_student, id_subject, id_teacher, value);
     }
 
     getById(id: number): Grade | null {

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { UserController } from './user.controller';
+import { authenticateUser } from '../authentification/authMiddleware';
 
 export class UserRouter {
     router = Router();
@@ -9,33 +10,57 @@ export class UserRouter {
     }
 
     private configureRoutes(): void {
-        this.router.get('/:id', (req, res, next) => {
-            try {
-                const result = this.userController.getById(
-                    parseInt(req.params.id),
-                );
-                res.status(200).json(result);
-            } catch (error: unknown) {
-                next(error);
-            }
-        });
 
-        this.router.post('/add-user', (req, res, next) => {
+        this.router.post('/add-user', authenticateUser, async (req, res, next) => {
             try {
-                const result = this.userController.add(req.body.username);
-                res.status(200).json(result);
-            } catch (error: unknown) {
-                next(error);
-            }
-        });
-
-        this.router.delete('/:id', (req, res, next) => {
-            try {
-                this.userController.delete(parseInt(req.params.id));
+                await this.userController.add(req.body.name, req.body.email, req.body.password);
                 res.status(200).json();
             } catch (error: unknown) {
                 next(error);
             }
         });
+
+        this.router.put('/:email', authenticateUser, async (req, res, next) => {
+            try {
+                await this.userController.updatePassword(req.params.email, req.body.password);;
+                res.status(200).json();
+            } catch (error: unknown) {
+                next(error);
+            }
+        });
+
+        this.router.get('/', authenticateUser, async (req, res, next) => {
+            try {
+              const result = await this.userController.getAllEmail();
+              res.status(200).json(result);
+            } catch (error) {
+              next(error);
+            }
+        });
+
+        this.router.delete('/:email', authenticateUser, async (req, res, next) => {
+            try {
+                await this.userController.delete(req.params.email);
+                res.status(200).json();
+            } catch (error: unknown) {
+                next(error);
+            }
+        });
+
+        this.router.post('/login', async (req, res, next) => {
+            try {
+              const { email, password } = req.body;
+              const token = await this.userController.login(email, password);
+          
+              if (token) {
+                res.status(200).json({ token });
+              } else {
+                res.status(401).json({ message: 'Invalid credentials' });
+              }
+            } catch (error: unknown) {
+              next(error);
+            }
+        });
     }
+          
 }

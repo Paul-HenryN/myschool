@@ -4,11 +4,11 @@ import { StudentService } from './student.service';
 export class StudentController {
     constructor(private studentService: StudentService) {}
 
-    add(username: string): Student {
+    add(name: string, email: string, password: string ): Student {
         // is the username empty ?
         // is the username whitespaced ?
         // other checks...
-        return this.studentService.add(username);
+        return this.studentService.add(name,email,password );
     }
 
     getById(id: number): Student | null {

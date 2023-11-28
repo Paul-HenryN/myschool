@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 
-const isLoggedIn = ref(false);
-
-function login() {
-  // Code pour se connecter à l'application
-  isLoggedIn.value = true;
-}
 </script>
 
 <template>
@@ -26,7 +19,7 @@ function login() {
             <br/>
             <section class="button">
               <router-link to="/login">
-                <button @click="login">Se connecter</button>
+                <button>Se connecter</button>
               </router-link>
             </section>
             <br/><br/>
@@ -41,24 +34,7 @@ function login() {
 </template>
 
 <style scoped>
-@font-face {
-  font-family: 'Poppins-Bold';
-  src: url('@/assets/static/font/Poppins-Bold.otf') format('woff2'); 
-  font-weight: bold;
-  font-style: bold;
-}
-@font-face {
-  font-family: 'Poppins-Regular';
-  src: url('@/assets/static/font/Poppins-Regular.otf') format('woff2'); 
-  font-weight: bold;
-  font-style: bold;
-}
-@font-face {
-  font-family: 'Poppins-Thin';
-  src: url('@/assets/static/font/Poppins-Thin.otf') format('woff2'); 
-  font-weight: bold;
-  font-style: bold;
-}
+
 #app {
   width: 100%;
   height: 100%;

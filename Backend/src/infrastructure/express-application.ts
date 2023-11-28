@@ -92,8 +92,11 @@ export class ExpressApplication {
     }
 
     private configureServer(): void {
-        this.server = new ExpressServer(this.expressRouter, this.port);
-    }
+            this.server = new ExpressServer(
+            this.allowedMainOrigin,
+            this.expressRouter,
+            this.port,
+        );    }
 
     private configureDb(): void {
         const host = process.env.HOST;

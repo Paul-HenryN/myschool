@@ -1,13 +1,36 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import axios from 'axios';
+import { ref, defineProps, defineEmits } from 'vue';
+import { useRouter } from 'vue-router';
+
+
+const props = defineProps(['onLogin']);
+const emits = defineEmits();
 
 const email = ref('');
 const password = ref('');
+const router = useRouter();
 
-const handleSubmit = () => {
-  // Ajoutez ici la logique de gestion de la soumission du formulaire
-  console.log('Formulaire soumis !');
+const errors = ref('');
+
+const handleSubmit = async () => {
+  try {
+    const response = await axios.post('http://localhost:3000/api/user/login', {
+      email: email.value,
+      password: password.value,
+    });
+
+    console.log('Réponse de l\'API :', response.data);
+    router.push('/admin');
+    emits('onLogin', response.data);
+  } catch (error) {
+    // Gérez les erreurs ici
+    console.error('Erreur lors de la connexion :', error);
+    errors.value = 'Erreur de connexion. Veuillez vérifier vos informations.';
+    emits('onError', errors.value);
+  }
 };
+
 </script>
 
 <template>
@@ -23,20 +46,20 @@ const handleSubmit = () => {
           <form @submit.prevent="handleSubmit">
             <div class="form-group">
               <label for="email">Email :</label>
-              <input type="email" id="email" v-model="email" required />
+              <input class="input" type="email" id="email" v-model="email" required />
             </div>
             <div class="form-group">
               <label for="password">Mot de passe :</label>
-              <input type="password" id="password" v-model="password" required />
+              <input class="input" type="password" id="password" v-model="password" required />
             </div>
             <br/>
             <div class="form-group">
               <div class="button">
-                <router-link to="/login">
-                  <button type="submit" >Se connecter</button>
-                </router-link>
+                  <button type="submit" >Valider</button>
               </div>
             </div>
+
+            <div v-if="errors" class="error">{{ errors }}</div>
 
           </form>
         </div>
@@ -46,23 +69,6 @@ const handleSubmit = () => {
 </template>
 
 <style scoped>
-@font-face {
-  font-family: 'Poppins-Bold';
-  src: url('@/assets/static/font/Poppins-Bold.otf') format('woff2'); 
-  font-weight: bold;
-  font-style: bold;
-}
-@font-face {
-  font-family: 'Poppins-Regular';
-  src: url('@/assets/static/font/Poppins-Regular.otf') format('woff2'); 
-  font-weight: bold;
-  font-style: bold;
-}
-#app {
-  width: 100%;
-  height: 100%;
-  background-color: #36a5dd;
-}
 .logo img {
   width: 100%;
   height: 100vh; 
@@ -90,11 +96,12 @@ form {
   max-width: 400px;
   margin: 0 auto;
 }
-
 .form-group {
   margin-bottom: 15px;
 }
-
+.input {
+  font-size: 13px; 
+}
 label {
   display: block;
   margin-bottom: 5px;

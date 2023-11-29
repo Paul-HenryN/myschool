@@ -56,7 +56,7 @@
 #myfooter{
   display: flex;
   flex-direction: column;
-  min-height: 43vh;
+  min-height: 50vh;
 }
 .foot{
   font-family: 'Poppins-Regular', sans-serif;

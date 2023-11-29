@@ -6,8 +6,10 @@ export default defineComponent({
   methods: {
     handleAction(event: Event) {
       const selectedOption = (event.target as HTMLSelectElement).value;
+
+      // Vérifiez quelle option a été sélectionnée
       if (selectedOption) {
-        // Utilisez la fonction de redirection
+        // Passez la valeur sélectionnée à la fonction redirectTo
         redirectTo(selectedOption);
       }
     },
@@ -32,7 +34,7 @@ export default defineComponent({
       <div class="second-bar">
         <select class="button" @change="handleAction">
           <option value="" disabled selected>Gérer les enseignants</option>
-          <option value="ajouter_enseignant">Ajouter</option>
+          <option value="ajoutEns">Ajouter</option>
           <option value="supprimer_enseignant">Supprimer</option>
           <option value="modifier_enseignant">Modifier</option>
           <option value="consulter_enseignant">Consulter</option>
@@ -42,7 +44,7 @@ export default defineComponent({
         </router-link> -->
         <select class="button" @change="handleAction">
           <option value="" disabled selected> Gérer les élèves</option>
-          <option value="ajouter_enseignant">Ajouter</option>
+          <option value="ajoutElev">Ajouter</option>
           <option value="supprimer_enseignant">Supprimer</option>
           <option value="modifier_enseignant">Modifier</option>
           <option value="consulter_enseignant">Consulter</option>

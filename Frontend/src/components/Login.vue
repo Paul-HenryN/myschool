@@ -21,6 +21,8 @@ const handleSubmit = async () => {
     });
 
     console.log('Réponse de l\'API :', response.data);
+    const token = response.data.token;
+    localStorage.setItem('token', token);
     router.push('/admin');
     emits('onLogin', response.data);
   } catch (error) {

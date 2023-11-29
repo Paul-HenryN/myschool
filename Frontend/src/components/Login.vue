@@ -69,6 +69,11 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
+#app {
+    width: 100%;
+    height: 100%;
+    background-color: #36a5dd;
+}
 .logo img {
   width: 100%;
   height: 100vh; 

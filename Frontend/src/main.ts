@@ -11,3 +11,7 @@ const app = createApp(App)
 app.use(router)
 
 app.mount('#app')
+
+export function redirectTo(action: string) {
+    router.push({ name: action });
+}

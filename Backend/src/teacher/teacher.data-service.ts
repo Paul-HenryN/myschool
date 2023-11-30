@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt';
 export class TeacherDataService implements TeacherService {
     async login(email: string, password: string): Promise<string | null> {
         try {
-            const query = `SELECT * FROM admins WHERE email = ?`;
+            const query = `SELECT * FROM teachers WHERE email = ?`;
             const result = await ExpressDb.execute(query, [email]);
 
             if (result && Array.isArray(result) && result.length > 0) {
@@ -46,7 +46,7 @@ export class TeacherDataService implements TeacherService {
                 email: email,
                 password: hashedPassword,
             };
-            const query = `INSERT INTO admins (name, email, password) VALUES ('${name}', '${email}', '${hashedPassword}')`;
+            const query = `INSERT INTO teachers (name, email, password) VALUES ('${name}', '${email}', '${hashedPassword}')`;
             const result = await ExpressDb.execute(query);
 
             console.log('Teacher successfully added');
@@ -64,7 +64,7 @@ export class TeacherDataService implements TeacherService {
         try {
             const hashedPassword = await this.hashPassword(newPassword);
 
-            const query = `UPDATE admins SET password = ? WHERE email = ?`;
+            const query = `UPDATE teachers SET password = ? WHERE email = ?`;
             const result = await ExpressDb.execute(query, [
                 hashedPassword,
                 email,
@@ -93,7 +93,7 @@ export class TeacherDataService implements TeacherService {
     }
 
     async getAllEmail(): Promise<String[] | null> {
-        const query = `SELECT email FROM admins`;
+        const query = `SELECT email FROM teachers`;
 
         try {
             const result = await ExpressDb.execute(query);
@@ -117,7 +117,7 @@ export class TeacherDataService implements TeacherService {
     }
 
     async delete(email: string): Promise<string> {
-        const query = `DELETE FROM admins WHERE email = '${email}'`;
+        const query = `DELETE FROM teachers WHERE email = '${email}'`;
 
         try {
             const result = await ExpressDb.execute(query);
@@ -137,7 +137,7 @@ export class TeacherDataService implements TeacherService {
     }
 
     async getByEmail(email: string): Promise<Teacher | null> {
-        const query = 'SELECT * FROM admins WHERE email = ?';
+        const query = 'SELECT * FROM teachers WHERE email = ?';
         const result = await ExpressDb.execute(query, [email]);
 
         // Vérifiez si un utilisateur a été trouvé

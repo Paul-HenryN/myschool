@@ -17,6 +17,12 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue')
     },
     {
+      path: '/Teacher',
+      name: 'teacher',
+      component: () => import('../views/TeacherView.vue'),
+      beforeEnter: requireAuth // Appliquez la fonction de garde ici
+    },
+    {
       path: '/admin',
       name: 'admin',
       component: () => import('../views/AdminView.vue'),

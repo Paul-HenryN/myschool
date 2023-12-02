@@ -1,0 +1,23 @@
+.error {
+    color: red;
+    margin-top: 10px;
+}
+@font-face {
+    font-family: 'Poppins-Bold';
+    src: url('@/assets/static/font/Poppins-Bold.otf') format('woff2'); 
+    font-weight: bold;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'Poppins-Regular';
+    src: url('@/assets/static/font/Poppins-Regular.otf') format('woff2'); 
+    font-weight: bold;
+    font-style: bold;
+}
+@font-face {
+    font-family: 'Poppins-Thin';
+    src: url('@/assets/static/font/Poppins-Thin.otf') format('woff2'); 
+    font-weight: bold;
+    font-style: bold;
+}
+

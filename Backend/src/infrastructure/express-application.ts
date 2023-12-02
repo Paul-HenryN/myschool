@@ -12,6 +12,7 @@ import { GradeDataService } from '../grade/grade.data-service';
 import { TeacherService } from '../teacher/teacher.service';
 
 export class ExpressApplication {
+    private allowedMainOrigin!: string;
     private expressRouter!: ExpressRouter;
     private expressDb!: ExpressDb;
     private port!: string;
@@ -31,21 +32,47 @@ export class ExpressApplication {
 
     private configureApplication(): void {
         this.configureEnvironment();
-        this.configureServerPort();
+        this.configureVariables();
         this.configureServices();
         this.configureExpressRouter();
-        this.configureDb();
         this.configureServer();
+        this.configureDb();
     }
 
     private configureEnvironment(): void {
         dotenv.config({
-            path: '.env',
+            path: '.env.template',
         });
+    }
+    private configureVariables(): void {
+        this.configureAllowedMainOrigin();
+        this.configureServerPort();
+    }
+
+    private configureAllowedMainOrigin(): void {
+        this.allowedMainOrigin = this.getAllowedMainOrigin();
+    }
+
+    private getAllowedMainOrigin(): string {
+        const allowedMainOrigin = process.env.ALLOWED_MAIN_ORIGIN;
+        if (!allowedMainOrigin) {
+            throw new Error('No allowed main origin was found in env file.');
+        }
+
+        return allowedMainOrigin;
     }
 
     private configureServerPort(): void {
         this.port = this.getPort();
+    }
+
+    private getPort(): string {
+        const port = process.env.PORT;
+        if (!port) {
+            throw new Error('No port was found in env file.');
+        }
+
+        return port;
     }
 
     private configureServices(): void {
@@ -65,17 +92,11 @@ export class ExpressApplication {
     }
 
     private configureServer(): void {
-        this.server = new ExpressServer(this.expressRouter, this.port);
-    }
-
-    private getPort(): string {
-        const port = process.env.PORT;
-        if (!port) {
-            throw new Error('No port was found in env file.');
-        }
-
-        return port;
-    }
+            this.server = new ExpressServer(
+            this.allowedMainOrigin,
+            this.expressRouter,
+            this.port,
+        );    }
 
     private configureDb(): void {
         const host = process.env.HOST;

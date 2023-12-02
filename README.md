@@ -14,3 +14,15 @@ Projet renforcement full js
 
 - Voir les notes des différentes matières
 - Voir un bulletin de notes
+
+
+### Adminitrateur
+
+- Gère les utilisateurs (étudiants et enseignants)
+- Créer des identifiants pour chaque utilisateur
+- Identifiant de l'admin par défaut juste besoin de son mail et mots de passe pour la connexion
+{
+  "name": "Administrateur",
+  "email": "administrateur@myschool.net",
+  "password": "AdminSecretPassword123"
+}

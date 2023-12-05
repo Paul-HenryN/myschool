@@ -51,10 +51,10 @@ export default defineComponent({
         </select>
         <select class="button" @change="handleAction">
           <option value="" disabled selected> Gérer l'administration</option>
-          <option value="ajouter_enseignant">Ajouter</option>
-          <option value="supprimer_enseignant">Supprimer</option>
-          <option value="modifier_enseignant">Modifier</option>
-          <option value="consulter_enseignant">Consulter</option>
+          <option value="modAdmin">Modifier votre mot de passe</option>
+          <option value="ajoutAdmin">Ajouter un administrateur</option>
+          <option value="ListAdmin">Liste des administrateurs</option>
+          <option value="SupAdmin">Supprimer un administrateur</option>
         </select>
       </div>
     </header>

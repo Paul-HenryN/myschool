@@ -16,24 +16,51 @@ const router = createRouter({
       name: 'login',
       component: () => import('../views/LoginView.vue')
     },
-    {
-      path: '/Teacher',
-      name: 'teacher',
-      component: () => import('../views/TeacherView.vue'),
-      beforeEnter: requireAuth // Appliquez la fonction de garde ici
-    },
+    //Routes pour l'administrateur*************************************************************
     {
       path: '/admin',
       name: 'admin',
-      component: () => import('../views/AdminView.vue'),
-      beforeEnter: requireAuth // Appliquez la fonction de garde ici
+      component: () => import('../views/AdministrateurView/AdminView.vue'),
+      beforeEnter: requireAuth 
     },
+    {
+      path: '/admin/modifier-mot-de-passe',
+      name: 'modAdmin',
+      component: () => import('../views/AdministrateurView/AdminMDPView.vue'),
+      beforeEnter: requireAuth 
+    },
+    {
+      path: '/admin/ajout-administrateur',
+      name: 'ajoutAdmin',
+      component: () => import('../views/AdministrateurView/AdminAddView.vue'),
+      beforeEnter: requireAuth 
+    },
+    {
+      path: '/admin/liste-administrateurs',
+      name: 'ListAdmin',
+      component: () => import('../views/AdministrateurView/AdminListView.vue'),
+      beforeEnter: requireAuth 
+    },
+    {
+      path: '/admin/suprimer-administrateur',
+      name: 'SupAdmin',
+      component: () => import('../views/AdministrateurView/AdminSupView.vue'),
+      beforeEnter: requireAuth 
+    },
+    //routes pour l'enseignant******************************************************************
     {
       path: '/admin/ajoutEns',
       name: 'ajoutEns',
       component: () => import('../views/enseignantView/AjouterEnseignantView.vue'),
-      beforeEnter: requireAuth // Appliquez la fonction de garde ici
+      beforeEnter: requireAuth 
     },
+    
+    /*{
+      path: '/Teacher',
+      name: 'teacher',
+      component: () => import('../views/TeacherView.vue'),
+      beforeEnter: requireAuth // Appliquez la fonction de garde ici
+    },*/
     {
       path: '/:catchAll(.*)',
       component: () => import('../views/NotFoundView.vue'),

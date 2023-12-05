@@ -20,4 +20,6 @@
     font-weight: bold;
     font-style: bold;
 }
-
+.success{
+    color: green;
+}

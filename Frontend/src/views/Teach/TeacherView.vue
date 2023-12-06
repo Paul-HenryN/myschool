@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import Add from '../../components/Administrateur/AdminAdd.vue'
+import Header from '../../components/Teach/Header.vue'
+import Teach from '../../components/Teach/Teacher.vue'
 import Footer from '../../components/Footer.vue'
 </script>
 
 <template>
   <main>
-    
-    <Add />
+    <Header />
+    <Teach />
     <Footer />
   </main>
 </template>

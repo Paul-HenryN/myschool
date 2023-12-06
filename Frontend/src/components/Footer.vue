@@ -11,11 +11,11 @@
             <p class="left">
               <strong><h6>Suivez-nous</h6></strong>            
               <img src="@/assets/static/facebook.svg" alt="Icône" class="icon"/>
-              <a href="https://www.facebook.com/ecoleexample" target="_blank"> Suivez myschool sur Facebook</a><br/>
+              <a href="#" target="_blank"> Suivez myschool sur Facebook</a><br/>
               <img src="@/assets/static/twitter.svg" alt="Icône" class="icon"/>
-              <a href="https://twitter.com/ecoleexample" target="_blank"> Suivez myschool sur Twitter</a><br/>
+              <a href="#" target="_blank"> Suivez myschool sur Twitter</a><br/>
               <img src="@/assets/static/linkedin.svg" alt="Icône" class="icon"/>
-              <a href="https://www.linkedin.com/school/ecoleexample" target="_blank"> Suivez myschool sur LinkedIn</a><br/>
+              <a href="#" target="_blank"> Suivez myschool sur LinkedIn</a><br/>
             </p>
           </div>
           <div class="col-md-4 foot">

@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import Password from '../../components/Administrateur/AdminMDP.vue'
+import Header from '../../components/Admin/Header.vue'
+import Admin from '../../components/Admin/Admin.vue'
 import Footer from '../../components/Footer.vue'
 </script>
 
 <template>
   <main>
-    
-    <Password />
+    <Header />
+    <Admin />
     <Footer />
   </main>
 </template>

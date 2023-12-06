@@ -12,10 +12,21 @@ const password = ref('');
 const router = useRouter();
 
 const errors = ref('');
+const axiosInstance = axios.create();
+
+// Ajouter un intercepteur pour toutes les requêtes sortantes
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    // Ajouter le token à l'en-tête Authorization
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 const handleSubmit = async () => {
   try {
-    const response = await axios.post('http://localhost:3000/api/user/login', {
+    const response = await axiosInstance.post('http://localhost:3000/api/user/login', {
       email: email.value,
       password: password.value,
     });

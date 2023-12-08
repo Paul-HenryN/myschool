@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 const handleSubmit = async () => {
   try {
-    const response = await axiosInstance.put(`http://localhost:3000/api/user/${encodeURIComponent(email.value)}`, {
+    const response = await axiosInstance.put(`http://localhost:3000/api/teacher/${encodeURIComponent(email.value)}`, {
       password: password.value,
     });
     console.log('Réponse de l\'API :', response.data);

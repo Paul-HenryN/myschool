@@ -21,7 +21,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 onMounted(async () => {
   try {
-    const response = await axiosInstance.get(`http://localhost:3000/api/user`);
+    const response = await axiosInstance.get(`http://localhost:3000/api/teacher`);
     teachers.value = response.data;
     console.log('Réponse de l\'API :', response.data);
   } catch (error) {
@@ -52,7 +52,7 @@ const handleAction = (event: Event) => {
         </thead>
         <tbody>
           <tr v-for="teacher in teachers">
-            <td>{{ teacher }} ddd</td>
+            <td>{{ teacher }} </td>
           </tr>
         </tbody>
       </table>

@@ -23,7 +23,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 const handleSubmit = async () => {
   try {
-    const response = await axiosInstance.post(`http://localhost:3000/api/user/add-user`, {
+    const response = await axiosInstance.post(`http://localhost:3000/api/teacher/add`, {
       name: name.value,
       email: email.value,
       password: password.value,

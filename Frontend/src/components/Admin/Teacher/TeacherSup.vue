@@ -27,7 +27,7 @@ const handleSubmit = async () => {
       return;
     }
 
-    const response = await axiosInstance.delete(`http://localhost:3000/api/user/${encodeURIComponent(email.value)}`, {
+    const response = await axiosInstance.delete(`http://localhost:3000/api/teacher/${encodeURIComponent(email.value)}`, {
     });
     console.log('Réponse de l\'API :', response.data);
     success.value = 'Si un administrateur avec ce mail a été trouvé dans la base de donné, il a été suprimé avec succès.';

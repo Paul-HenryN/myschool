@@ -4,11 +4,18 @@ import { TeacherService } from './teacher.service';
 export class TeacherController {
     constructor(private TeacherService: TeacherService) {}
 
-    async add(name: string, email: string, password: string): Promise<Teacher> {
+    async add(
+        name: string,
+        email: string,
+        password: string,
+        subjectId: number,
+    ): Promise<Teacher> {
         try {
             // Vérification de la présence du nom, de l'email et du mot de passe
-            if (!name || !email || !password) {
-                throw new Error('Name, email, and password are required');
+            if (!name || !email || !password || !subjectId) {
+                throw new Error(
+                    'Name, email, subject id and password are required',
+                );
             }
 
             // Vérification de la validité de l'email
@@ -24,7 +31,12 @@ export class TeacherController {
             }
 
             // Si toutes les vérifications passent, appeler le service pour ajouter l'utilisateur
-            return await this.TeacherService.add(name, email, password);
+            return await this.TeacherService.add(
+                name,
+                email,
+                password,
+                subjectId,
+            );
         } catch (error) {
             throw error;
         }

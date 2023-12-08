@@ -16,6 +16,7 @@ export class TeacherRouter {
                     req.body.name,
                     req.body.email,
                     req.body.password,
+                    req.body.subjectId,
                 );
                 res.status(200).json();
             } catch (error: unknown) {

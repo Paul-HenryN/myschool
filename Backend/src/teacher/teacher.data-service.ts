@@ -36,7 +36,12 @@ export class TeacherDataService implements TeacherService {
             throw error;
         }
     }
-    async add(name: string, email: string, password: string): Promise<Teacher> {
+    async add(
+        name: string,
+        email: string,
+        password: string,
+        subjectId: number,
+    ): Promise<Teacher> {
         try {
             const hashedPassword = await this.hashPassword(password);
             // install bcrypt to crypt password
@@ -46,8 +51,13 @@ export class TeacherDataService implements TeacherService {
                 email: email,
                 password: hashedPassword,
             };
-            const query = `INSERT INTO teachers (name, email, password) VALUES ('${name}', '${email}', '${hashedPassword}')`;
-            const result = await ExpressDb.execute(query);
+            const query = `INSERT INTO teachers (name, email, password, id_subject) VALUES (?, ?, ?, ?)`;
+            const result = await ExpressDb.execute(query, [
+                name,
+                email,
+                hashedPassword,
+                subjectId,
+            ]);
 
             console.log('Teacher successfully added');
             return Teacher;

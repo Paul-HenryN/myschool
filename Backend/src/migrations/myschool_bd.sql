@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 20, 2023 at 09:11 AM
--- Server version: 10.4.17-MariaDB
--- PHP Version: 8.0.1
+-- Hôte : 127.0.0.1
+-- Généré le : ven. 08 déc. 2023 à 19:32
+-- Version du serveur : 10.4.28-MariaDB
+-- Version de PHP : 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `myschool_bd`
+-- Base de données : `myschool_bd`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admins`
+-- Structure de la table `admins`
 --
 
 CREATE TABLE `admins` (
@@ -32,10 +32,10 @@ CREATE TABLE `admins` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `admins`
+-- Déchargement des données de la table `admins`
 --
 
 INSERT INTO `admins` (`id_admin`, `name`, `email`, `password`) VALUES
@@ -45,12 +45,13 @@ INSERT INTO `admins` (`id_admin`, `name`, `email`, `password`) VALUES
 (11, 'Adr', 'adr@myschool.net', '$2b$10$5CCRkiFOLopAJom3ZtUOyu1ODsq.zPAjvZsBgFuxAbkvicuLBPLtK'),
 (12, 'Ad', 'ad@myschool.net', '$2b$10$3x32gMKftxC3athb7NRzXenUgyu.7g2R3gfLX0fTQZ5wy3S83WpfK'),
 (20, 'fer', 'fer@myschool.net', '$2b$10$nUocnBXEvWqp9p9IaBvDcOnzHBmfoo8YSh0ej6KT1oSxdmOkXko3K'),
-(22, 'hey', 'frg@myschool.net', '$2b$10$Mzf/9LtHpLHErNIMAsnScOENmTzesXZpSTU2ytDq5XNxcXpq5YamK');
+(22, 'hey', 'frg@myschool.net', '$2b$10$Mzf/9LtHpLHErNIMAsnScOENmTzesXZpSTU2ytDq5XNxcXpq5YamK'),
+(23, 'New teacher', 'newTeacher@myschool.net', '$2b$10$FuCXhya5V.2Xp/dI8esC.OAT0FZUyfecHrB1ofhoCWoGUZ1unFR16');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `grades`
+-- Structure de la table `grades`
 --
 
 CREATE TABLE `grades` (
@@ -58,10 +59,10 @@ CREATE TABLE `grades` (
   `id_subject` int(11) NOT NULL,
   `id_teacher` int(11) NOT NULL,
   `value` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `grades`
+-- Déchargement des données de la table `grades`
 --
 
 INSERT INTO `grades` (`id_student`, `id_subject`, `id_teacher`, `value`) VALUES
@@ -71,7 +72,7 @@ INSERT INTO `grades` (`id_student`, `id_subject`, `id_teacher`, `value`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `students`
+-- Structure de la table `students`
 --
 
 CREATE TABLE `students` (
@@ -79,10 +80,10 @@ CREATE TABLE `students` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `students`
+-- Déchargement des données de la table `students`
 --
 
 INSERT INTO `students` (`id_student`, `name`, `email`, `password`) VALUES
@@ -92,56 +93,60 @@ INSERT INTO `students` (`id_student`, `name`, `email`, `password`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `subjects`
+-- Structure de la table `subjects`
 --
 
 CREATE TABLE `subjects` (
   `id_subject` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `coefficient` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `subjects`
+-- Déchargement des données de la table `subjects`
 --
 
 INSERT INTO `subjects` (`id_subject`, `name`, `coefficient`) VALUES
-(1, 'Maths', 6),
-(2, 'Big Data', 1);
+(1, 'Développement durable', 2),
+(2, 'Développement durable', 2),
+(3, 'Anglais', 3);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `teachers`
+-- Structure de la table `teachers`
 --
 
 CREATE TABLE `teachers` (
   `id_teacher` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `password` varchar(255) NOT NULL,
+  `id_subject` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `teachers`
+-- Déchargement des données de la table `teachers`
 --
 
-INSERT INTO `teachers` (`id_teacher`, `name`, `email`, `password`) VALUES
-(1, 'Paul-Henry', 'ngpaulhenry@gmail.com', 'test'),
-(2, 'Pavone', 'pavone@gmail.com', 'test');
+INSERT INTO `teachers` (`id_teacher`, `name`, `email`, `password`, `id_subject`) VALUES
+(1, 'Paul-Henry', 'ngpaulhenry@gmail.com', 'test', 1),
+(2, 'Pavone', 'pavone@gmail.com', 'test', 1),
+(4, 'Brand new teacher', 'brandnew@myschool.net', '$2b$10$.tlKaNsgZTbSxhaTXAOhoOC9XYcKek46uLZXJ20m8gPAr80.UUJlS', 1),
+(5, 'Brand new teacher', 'testtest@myschool.net', '$2b$10$dkX0Uq1A70Yj/UqND3w.O.X5VVZ9wfMbkeylW1x7mQ7z0IA/fWCHa', 3);
 
 --
--- Indexes for dumped tables
+-- Index pour les tables déchargées
 --
 
 --
--- Indexes for table `admins`
+-- Index pour la table `admins`
 --
 ALTER TABLE `admins`
   ADD PRIMARY KEY (`id_admin`);
 
 --
--- Indexes for table `grades`
+-- Index pour la table `grades`
 --
 ALTER TABLE `grades`
   ADD PRIMARY KEY (`id_student`,`id_subject`,`id_teacher`),
@@ -149,57 +154,57 @@ ALTER TABLE `grades`
   ADD KEY `fk_id_teacher` (`id_teacher`);
 
 --
--- Indexes for table `students`
+-- Index pour la table `students`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`id_student`);
 
 --
--- Indexes for table `subjects`
+-- Index pour la table `subjects`
 --
 ALTER TABLE `subjects`
   ADD PRIMARY KEY (`id_subject`);
 
 --
--- Indexes for table `teachers`
+-- Index pour la table `teachers`
 --
 ALTER TABLE `teachers`
   ADD PRIMARY KEY (`id_teacher`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT pour les tables déchargées
 --
 
 --
--- AUTO_INCREMENT for table `admins`
+-- AUTO_INCREMENT pour la table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
--- AUTO_INCREMENT for table `students`
+-- AUTO_INCREMENT pour la table `students`
 --
 ALTER TABLE `students`
   MODIFY `id_student` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `subjects`
+-- AUTO_INCREMENT pour la table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id_subject` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_subject` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `teachers`
+-- AUTO_INCREMENT pour la table `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id_teacher` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_teacher` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- Constraints for dumped tables
+-- Contraintes pour les tables déchargées
 --
 
 --
--- Constraints for table `grades`
+-- Contraintes pour la table `grades`
 --
 ALTER TABLE `grades`
   ADD CONSTRAINT `fk_id_student` FOREIGN KEY (`id_student`) REFERENCES `students` (`id_student`),

@@ -25,7 +25,7 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('../views/Admin/AdminView.vue'),
-      beforeEnter: requireAuth 
+      //beforeEnter: requireAuth 
     },
     {
       path: '/admin/modifier-mot-de-passe',
@@ -103,6 +103,33 @@ const router = createRouter({
       path: '/admin/modifier-eleve',
       name: 'modEle',
       component: () => import('../views/Admin/StudentView/StudentMDPView.vue'),
+      beforeEnter: requireAuth 
+    },
+
+    //routes pour l'élève******************************************************************
+
+    {
+      path: '/admin/ajout-cours',
+      name: 'ajoutcours',
+      component: () => import('../views/Admin/CourseView/CourseAddView.vue'),
+      beforeEnter: requireAuth 
+    },
+    {
+      path: '/admin/liste-cours',
+      name: 'Listcours',
+      component: () => import('../views/Admin/CourseView/CourseListView.vue'),
+      beforeEnter: requireAuth 
+    },
+    {
+      path: '/admin/suprimer-cours',
+      name: 'Supcours',
+      component: () => import('../views/Admin/CourseView/CourseSupView.vue'),
+      beforeEnter: requireAuth 
+    },
+    {
+      path: '/admin/modifier-cours',
+      name: 'modcours',
+      component: () => import('../views/Admin/CourseView/CourseModView.vue'),
       beforeEnter: requireAuth 
     },
 

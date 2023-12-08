@@ -37,14 +37,6 @@ const handleSubmit = async () => {
     emits('onError', errors.value);
   }
 };
-const handleAction = (event: Event) => {
-  const selectedOption = (event.target as HTMLSelectElement).value;
-  console.log('Action sélectionnée :', selectedOption);
-  if (selectedOption) {
-    // Passez la valeur sélectionnée à la fonction redirectTo
-    redirectTo(selectedOption);
-  }
-};
 </script>
 
 <template>

@@ -39,13 +39,13 @@ const handleSubmit = async () => {
   <div class="mytext">
     <div class="text container">
       <form @submit.prevent="handleSubmit">
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="email">Email :</label>
           <input class="input" type="email" id="email" v-model="email" required />
-        </div>
+        </div> -->
         <div class="form-group">
-            <label for="password">Veuillez saisir votre nouveau mot de passe :</label>
-            <input class="input" type="password" id="password" v-model="password" required />
+            <label for="email">Veuillez choisir le nouveau professeur de cette matière :</label>
+            <input class="input" type="email" id="email" v-model="email" required />
         </div>
 
         <div class="form-group">

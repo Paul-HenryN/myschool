@@ -14,11 +14,9 @@ const router = useRouter();
 const errors = ref('');
 const axiosInstance = axios.create();
 
-// Ajouter un intercepteur pour toutes les requêtes sortantes
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
-    // Ajouter le token à l'en-tête Authorization
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
@@ -26,16 +24,53 @@ axiosInstance.interceptors.request.use((config) => {
 
 const handleSubmit = async () => {
   try {
-    const response = await axiosInstance.post('http://localhost:3000/api/user/login', {
+    const responseAdmin = await axiosInstance.post('http://localhost:3000/api/user/login', {
       email: email.value,
       password: password.value,
     });
 
-    console.log('Réponse de l\'API :', response.data);
-    const token = response.data.token;
-    localStorage.setItem('token', token);
-    router.push('/admin');
-    emits('onLogin', response.data);
+    console.log('Réponse de l\'API :', responseAdmin.data);
+
+    if (responseAdmin.data && responseAdmin.status === 200) {
+      const token = responseAdmin.data.token;
+      localStorage.setItem('token', token);
+      console.log('Redirection vers /admin');
+      router.push('/admin');
+      emits('onLogin', responseAdmin.data);
+      return;
+    }
+
+    const responseTeacher = await axiosInstance.post('http://localhost:3000/api/teacher/login', {
+      email: email.value,
+      password: password.value,
+    });
+    
+    if (responseTeacher.data && responseTeacher.status === 200) {
+      console.log('Réponse de l\'API (enseignant) :', responseTeacher.data);
+      const token = responseTeacher.data.token;
+      localStorage.setItem('token', token);
+      router.push('/enseignant');
+      emits('onLogin', responseTeacher.data);
+      return;
+    }
+
+    const responseStudent = await axiosInstance.post('http://localhost:3000/api/student/login', {
+      email: email.value,
+      password: password.value,
+    });
+
+    if (responseStudent.data && responseStudent.status === 200) {
+      console.log('Réponse de l\'API (élève) :', responseStudent.data);
+      const token = responseStudent.data.token;
+      localStorage.setItem('token', token);
+      router.push('/élève');
+      emits('onLogin', responseStudent.data);
+    } else {
+      // Aucune correspondance trouvée pour le type d'utilisateur
+      console.error('Aucune correspondance trouvée pour le type d\'utilisateur.');
+      errors.value = 'Erreur de connexion. Veuillez vérifier vos informations.';
+      emits('onError', errors.value);
+    }
   } catch (error) {
     // Gérez les erreurs ici
     console.error('Erreur lors de la connexion :', error);

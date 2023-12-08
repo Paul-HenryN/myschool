@@ -39,7 +39,7 @@ onMounted(async () => {
       <table>
         <thead>
           <tr>
-            <th>Adresse mails des élèves</th>
+            <th>Adresse différents cours</th>
           </tr>
         </thead>
         <tbody>

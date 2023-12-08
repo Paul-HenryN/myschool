@@ -46,13 +46,13 @@ const handleSubmit = async () => {
       <p> 
         <form @submit.prevent="handleSubmit">
           <div class="form-group">
-            <label for="name">Veuillez saisir l'adresse mail de l'élève à supprimer:</label>
+            <label for="name">Veuillez choisir le cours à supprimer:</label>
             <input class="input" type="name" id="name" v-model="email" required />
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="name">Veuillez resaisir l'adresse mail de l'élève à supprimer:</label>
             <input class="input" type="name" id="name" v-model="remail" required/>
-          </div>
+          </div> -->
 
           <div class="form-group">
           <div class="button">

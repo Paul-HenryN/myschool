@@ -4,12 +4,14 @@ import { UserService } from '../user/user.service';
 import { UserDataService } from '../user/user.data-service';
 import * as dotenv from 'dotenv';
 import { ExpressDb } from './express-db';
+import { TeacherService } from '../teacher/teacher.service';
 import { TeacherDataService } from '../teacher/teacher.data-service';
 import { StudentService } from '../student/student.service';
 import { StudentDataService } from '../student/student.data-service';
 import { GradeService } from '../grade/grade.service';
 import { GradeDataService } from '../grade/grade.data-service';
-import { TeacherService } from '../teacher/teacher.service';
+import { SubjectService } from '../subject/subject.service';
+import { SubjectDataService } from '../subject/subject.data-service';
 
 export class ExpressApplication {
     private allowedMainOrigin!: string;
@@ -21,6 +23,7 @@ export class ExpressApplication {
     private teacherService!: TeacherService;
     private studentService!: StudentService;
     private gradeService!: GradeService;
+    private subjectService!: SubjectService;
 
     constructor() {
         this.configureApplication();
@@ -80,6 +83,7 @@ export class ExpressApplication {
         this.teacherService = new TeacherDataService();
         this.studentService = new StudentDataService();
         this.gradeService = new GradeDataService();
+        this.subjectService = new SubjectDataService();
     }
 
     private configureExpressRouter(): void {
@@ -88,6 +92,7 @@ export class ExpressApplication {
             this.teacherService,
             this.studentService,
             this.gradeService,
+            this.subjectService,
         );
     }
 
@@ -96,7 +101,8 @@ export class ExpressApplication {
             this.allowedMainOrigin,
             this.expressRouter,
             this.port,
-        );    }
+        );    
+    }
 
     private configureDb(): void {
         const host = process.env.HOST;

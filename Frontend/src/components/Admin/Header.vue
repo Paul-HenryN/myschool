@@ -41,6 +41,13 @@ const handleAction = (event: Event) => {
           <option value="modEle">Modifier l'élève</option>
         </select>
         <select class="button" @change="handleAction">
+          <option value="" disabled selected> Gérer les cours</option>
+          <option value="ajoutcours">Ajouter un cours</option>
+          <option value="Listcours">Liste des cours</option>
+          <option value="Supcours">Supprimer un cours</option>
+          <option value="modcours">Modifier cours</option>
+        </select>
+        <select class="button" @change="handleAction">
           <option value="" disabled selected> Gérer l'administration</option>
           <option value="modAdmin">Modifier votre mot de passe</option>
           <option value="ajoutAdmin">Ajouter un administrateur</option>

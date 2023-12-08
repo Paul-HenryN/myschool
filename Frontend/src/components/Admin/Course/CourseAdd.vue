@@ -6,6 +6,7 @@ import { ref, defineProps, defineEmits } from 'vue';
 
 const emits = defineEmits();
 
+const name = ref('');
 const email = ref('');
 const password = ref('');
 const success = ref('');
@@ -22,15 +23,18 @@ axiosInstance.interceptors.request.use((config) => {
 
 const handleSubmit = async () => {
   try {
-    const response = await axiosInstance.put(`http://localhost:3000/api/user/${encodeURIComponent(email.value)}`, {
+    const response = await axiosInstance.post(`http://localhost:3000/api/user/add-user`, {
+      name: name.value,
+      email: email.value,
       password: password.value,
     });
     console.log('Réponse de l\'API :', response.data);
-    success.value = 'Mot de passe mis à jour avec succès.';
+    success.value = 'Administrateur ajouter avec succès.';
   } catch (error) {
     // Gérez les erreurs ici
-    console.error('Erreur lors de la mise à jour du mot de passe :', error);
-    errors.value = 'Erreur lors de la mise à jour du mot de passe';
+    console.error('Erreur, administrateur pas ajouté :', error);
+    errors.value = 'Erreur, administrateur pas ajouté';
+    emits('onError', errors.value);
   }
 };
 </script>
@@ -40,11 +44,15 @@ const handleSubmit = async () => {
     <div class="text container">
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
-          <label for="email">Email :</label>
-          <input class="input" type="email" id="email" v-model="email" required />
+            <label for="name">Veuillez saisir l'intitulé du cours à ajouter:</label>
+            <input class="input" type="name" id="name" v-model="name" required />
         </div>
         <div class="form-group">
-            <label for="password">Veuillez saisir votre nouveau mot de passe :</label>
+            <label for="email">Veuillez choisir le professeur donnant ce cours:</label>
+            <input class="input" type="email" id="email" v-model="email" required />
+        </div>
+        <div class="form-group">
+            <label for="password">Veuillez saisir le mot de passe de l'élève à ajouter:</label>
             <input class="input" type="password" id="password" v-model="password" required />
         </div>
 
@@ -53,6 +61,7 @@ const handleSubmit = async () => {
             <button type="submit" >Valider</button>
           </div>
         </div>
+
         <div v-if="success" class="success">{{ success }}</div>
         <div v-if="errors" class="error">{{ errors }}</div>
       </form>
@@ -63,5 +72,4 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-
 </style>

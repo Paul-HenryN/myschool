@@ -1,7 +1,10 @@
 import { Teacher } from './teacher';
 
 export interface TeacherService {
-    add(username: string): Teacher;
-    getById(id: number): Teacher | null;
-    delete(id: number): void;
+    add(name: string, email: string, password: string): Promise<Teacher>;
+    updatePassword(email: string, newPassword: string): Promise<Teacher | null>;
+    getAllEmail(): Promise<String[] | null>;
+    delete(email: string): Promise<string>;
+    login(email: string, password: string): Promise<string | null>;
+    getByEmail(email: string): Promise<Teacher | null>;
 }

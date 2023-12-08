@@ -1,6 +1,7 @@
 export class Subject {
     constructor(
+        public id: number,
         public name: string,
-        public teacher: string,
+        public coefficient: number,
     ) {}
 }

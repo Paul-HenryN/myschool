@@ -37,6 +37,7 @@ export default defineComponent({
 </template>
 
 <style scoped>
+
 img{
   width: 50px; 
   height: auto; 

@@ -12,7 +12,7 @@ const handleAction = (event: Event) => {
 </script>
 
 <template>
-  <div id="myfooter">
+  <div class="mytext">
     <header>
       <div class="container first-bar">
         <div class="row">
@@ -31,7 +31,7 @@ const handleAction = (event: Event) => {
           <option value="ajoutEns">Ajouter un enseignant</option>
           <option value="ListEns">Liste des enseignants</option>
           <option value="SupEns">Supprimer un enseignant</option>
-          <option value="modEns">Modifier l'enseignant</option>
+          <option value="modEns">Modifier mot de passe</option>
         </select>
         <select class="button" @change="handleAction">
           <option value="" disabled selected> Gérer les élèves</option>
@@ -49,10 +49,10 @@ const handleAction = (event: Event) => {
         </select>
         <select class="button" @change="handleAction">
           <option value="" disabled selected> Gérer l'administration</option>
-          <option value="modAdmin">Modifier votre mot de passe</option>
           <option value="ajoutAdmin">Ajouter un administrateur</option>
           <option value="ListAdmin">Liste des administrateurs</option>
-          <option value="SupAdmin">Supprimer un administrateur</option>
+          <option value="SupAdmin">Supprimer administrateur</option>
+          <option value="modAdmin">Modifier mot de passe</option>
         </select>
       </div>
     </header>  

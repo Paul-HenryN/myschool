@@ -1,7 +1,8 @@
-import express from 'express';
-import cors, { CorsOptions } from 'cors';
-import { ExpressRouter } from './express-router';
 import bodyParser from 'body-parser';
+import cors, { CorsOptions } from 'cors';
+import express from 'express';
+import { ExpressRouter } from './express-router';
+import { errorHandler } from '../middleware/error-handler';
 
 export class ExpressServer {
     private express = express();
@@ -24,6 +25,7 @@ export class ExpressServer {
         this.configureCorsPolicy();
         this.configureBodyParser();
         this.configureRoutes();
+        this.configureErrorHandler();
     }
 
     private configureCorsPolicy(): void {
@@ -45,6 +47,10 @@ export class ExpressServer {
 
     private configureBodyParser(): void {
         this.express.use(bodyParser.json());
+    }
+
+    private configureErrorHandler(): void {
+        this.express.use(errorHandler);
     }
 
     private configureRoutes(): void {

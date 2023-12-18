@@ -1,6 +1,3 @@
-export class Student {
-    constructor(
-        public id: number,
-        public username: string,
-    ) {}
-}
+import { User } from '../user/user';
+
+export class Student extends User {}

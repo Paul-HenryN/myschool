@@ -1,8 +1,13 @@
 import { Grade } from './grade';
 
 export interface GradeService {
-    add(id_student: number, id_subject: number, id_teacher: number, value: number): Promise<Grade>;
-    getById(id: number): Promise<Grade | null>;
-    delete(id: number): void;
-    updatevalue(ids: number, ide:number,newvalue: number): Promise<Grade | null>;
+    add(studentId: number, subjectId: number, value: number): Promise<Grade>;
+    getAll(): Promise<Grade[]>;
+    getByStudentId(studentId: number): Promise<Grade[]>;
+    getByStudentAndSubject(
+        studentId: number,
+        subjectId: number,
+    ): Promise<Grade>;
+    update(studentId: number, subjectId: number, value: number): Promise<Grade>;
+    delete(studentId: number, subjectId: number): Promise<void>;
 }

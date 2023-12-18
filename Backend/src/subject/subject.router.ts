@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { SubjectController } from './subject.controller';
-import { authenticateUser } from '../authentification/authMiddleware';
 
 export class SubjectRouter {
     router = Router();
@@ -10,29 +9,16 @@ export class SubjectRouter {
     }
 
     private configureRoutes(): void {
-        this.router.post(
-            '/add-subject',
-            authenticateUser,
-            async (req, res, next) => {
-                try {
-                    const subject = await this.subjectController.add(
-                        req.body.name,
-                        req.body.coefficient,
-                    );
-                    res.status(200).json(subject);
-                } catch (error: unknown) {
-                    next(error);
-                }
-            },
-        );
-
-        this.router.get('/:id', async (req, res, next) => {
-            const id = parseInt(req.params.id);
+        this.router.post('/', async (req, res, next) => {
+            const { name, coefficient } = req.body;
 
             try {
-                const subject = await this.subjectController.getById(id);
+                const result = await this.subjectController.add(
+                    name,
+                    coefficient,
+                );
 
-                res.status(200).json(subject);
+                res.json(result);
             } catch (error: unknown) {
                 next(error);
             }
@@ -40,43 +26,53 @@ export class SubjectRouter {
 
         this.router.get('/', async (req, res, next) => {
             try {
-                const subjects = await this.subjectController.getAll();
+                const result = await this.subjectController.getAll();
 
-                res.status(200).json(subjects);
+                res.json(result);
             } catch (error: unknown) {
-                next(error);
+                throw error;
             }
         });
 
-        this.router.put('/:id', authenticateUser, async (req, res, next) => {
-            const id = parseInt(req.params.id);
+        this.router.get('/:id', async (req, res, next) => {
+            const id = +req.params.id;
 
             try {
-                const subject = await this.subjectController.update(
-                    id,
-                    req.body.name,
-                    req.body.coefficient,
-                );
-                res.status(200).json(subject);
+                const result = await this.subjectController.getById(id);
+
+                res.json(result);
             } catch (error: unknown) {
                 next(error);
             }
         });
 
-        // this.router.get('/', authenticateUser, async (req, res, next) => {
-        //     try {
-        //         const result = await this.subjectController.getAllSubject();
-        //         res.status(200).json(result);
-        //     } catch (error) {
-        //         next(error);
-        //     }
-        // });
+        this.router.put('/:id', async (req, res, next) => {
+            const id = +req.params.id;
+            const { name, coefficient } = req.body;
 
-        this.router.delete('/:id', authenticateUser, async (req, res, next) => {
-            const id = parseInt(req.params.id);
+            try {
+                const result = await this.subjectController.update(
+                    id,
+                    name,
+                    coefficient,
+                );
+
+                res.json(result);
+            } catch (error: unknown) {
+                next(error);
+            }
+        });
+
+        this.router.delete('/:id', async (req, res, next) => {
+            const id = +req.params.id;
+
             try {
                 await this.subjectController.delete(id);
-                res.status(200).json();
+
+                res.json({
+                    success: true,
+                    message: 'Subject deleted successfully.',
+                });
             } catch (error: unknown) {
                 next(error);
             }

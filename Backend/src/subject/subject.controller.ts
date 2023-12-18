@@ -1,3 +1,10 @@
+import { BadInputError } from '../exceptions/bad-input-error';
+import {
+    isNumberDecimal,
+    isNumberNegative,
+    isStrictlyNaN,
+    isStringEmpty,
+} from '../utils';
 import { Subject } from './subject';
 import { SubjectService } from './subject.service';
 
@@ -6,31 +13,16 @@ export class SubjectController {
 
     async add(name: string, coefficient: number): Promise<Subject> {
         try {
-            // Vérification de la présence du nom et du coefficient
-            if (!name || !coefficient) {
-                throw new Error('Name, coefficient are required');
+            if (isStringEmpty(name) || !coefficient) {
+                throw new BadInputError('Name and coefficient are required.');
             }
 
-            // // Vérification si la matiere existe déjà
-            // const existingUser = await this.subjectService.getByName(name);
-            // if (existingUser) {
-            //     throw new Error('Name already exists');
-            // }
-
-            // Si toutes les vérifications passent, appeler le service pour ajouter l'utilisateur
-            return await this.subjectService.add(name, coefficient);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async getById(id: number): Promise<Subject> {
-        try {
-            if (!id || isNaN(id) || id < 0) {
-                throw new Error('Invalid id');
+            if (isStrictlyNaN(coefficient)) {
+                throw new BadInputError('Coefficient must be a number.');
             }
 
-            const subject = await this.subjectService.getById(id);
+            const subject = await this.subjectService.add(name, coefficient);
+
             return subject;
         } catch (error: unknown) {
             throw error;
@@ -46,30 +38,83 @@ export class SubjectController {
         }
     }
 
-    update(
-        id: number,
-        newName: string,
-        newCoefficient: number,
-    ): Promise<Subject> {
+    async getById(id: number): Promise<Subject> {
         try {
-            if (!id || isNaN(id) || id < 0) {
-                throw new Error('Invalid id');
+            if (isStrictlyNaN(id)) {
+                throw new Error('Given id is not a number.');
             }
 
-            if (!newName || !newCoefficient) {
-                throw new Error('Name, coefficient are required');
+            if (isNumberDecimal(id)) {
+                throw new Error('Given id is a decimal.');
             }
-            return this.subjectService.update(id, newName, newCoefficient);
-        } catch (error) {
+
+            if (isNumberNegative(id)) {
+                throw new Error('Given id is negative.');
+            }
+
+            const subject = await this.subjectService.getById(id);
+
+            return subject;
+        } catch (error: unknown) {
             throw error;
         }
     }
 
-    // getAllSubject(): Promise<String[] | null> {
-    //     return this.subjectService.getAllSubject();
-    // }
+    async update(
+        id: number,
+        name: string,
+        coefficient: number,
+    ): Promise<Subject> {
+        try {
+            if (isStrictlyNaN(id)) {
+                throw new Error('Given id is not a number.');
+            }
+
+            if (isNumberDecimal(id)) {
+                throw new Error('Given id is a decimal.');
+            }
+
+            if (isNumberNegative(id)) {
+                throw new Error('Given id is negative.');
+            }
+
+            if (isStringEmpty(name) || !coefficient) {
+                throw new BadInputError('Name and coefficient are required.');
+            }
+
+            if (isStrictlyNaN(coefficient)) {
+                throw new BadInputError('Coefficient must be a number.');
+            }
+
+            const subject = await this.subjectService.update(
+                id,
+                name,
+                coefficient,
+            );
+
+            return subject;
+        } catch (error: unknown) {
+            throw error;
+        }
+    }
 
     async delete(id: number): Promise<void> {
-        return await this.subjectService.delete(id);
+        try {
+            if (isStrictlyNaN(id)) {
+                throw new Error('Given id is not a number.');
+            }
+
+            if (isNumberDecimal(id)) {
+                throw new Error('Given id is a decimal.');
+            }
+
+            if (isNumberNegative(id)) {
+                throw new Error('Given id is negative.');
+            }
+
+            await this.subjectService.delete(id);
+        } catch (error: unknown) {
+            throw error;
+        }
     }
 }

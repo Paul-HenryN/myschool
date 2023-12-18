@@ -1,27 +1,29 @@
 import { ExpressRouter } from './express-router';
 import { ExpressServer } from './express-server';
 import { UserService } from '../user/user.service';
-import { UserDataService } from '../user/user.data-service';
-import * as dotenv from 'dotenv';
-import { ExpressDb } from './express-db';
-import { TeacherService } from '../teacher/teacher.service';
-import { TeacherDataService } from '../teacher/teacher.data-service';
+import { UserDbService } from '../user/user.db-service';
+import { AuthService } from '../auth/auth.service';
+import { AuthDbService } from '../auth/auth.db-service';
 import { StudentService } from '../student/student.service';
-import { StudentDataService } from '../student/student.data-service';
-import { GradeService } from '../grade/grade.service';
-import { GradeDataService } from '../grade/grade.data-service';
+import { StudentDbService } from '../student/student.db-service';
+import * as dotenv from 'dotenv';
 import { SubjectService } from '../subject/subject.service';
-import { SubjectDataService } from '../subject/subject.data-service';
+import { SubjectDbService } from '../subject/subject.db-service';
+import { TeacherService } from '../teacher/teacher.service';
+import { TeacherDbService } from '../teacher/teacher.db-service';
+import { GradeService } from '../grade/grade.service';
+import { GradeDBService } from '../grade/grade.db-service';
 
 export class ExpressApplication {
     private allowedMainOrigin!: string;
     private expressRouter!: ExpressRouter;
-    private expressDb!: ExpressDb;
     private port!: string;
     private server!: ExpressServer;
     private userService!: UserService;
-    private teacherService!: TeacherService;
+    private authService!: AuthService;
     private studentService!: StudentService;
+    private subjectService!: SubjectService;
+    private teacherService!: TeacherService;
     private gradeService!: GradeService;
     private subjectService!: SubjectService;
 
@@ -39,14 +41,14 @@ export class ExpressApplication {
         this.configureServices();
         this.configureExpressRouter();
         this.configureServer();
-        this.configureDb();
     }
 
     private configureEnvironment(): void {
         dotenv.config({
-            path: '.env.template',
+            path: '.env',
         });
     }
+
     private configureVariables(): void {
         this.configureAllowedMainOrigin();
         this.configureServerPort();
@@ -79,37 +81,31 @@ export class ExpressApplication {
     }
 
     private configureServices(): void {
-        this.userService = new UserDataService();
-        this.teacherService = new TeacherDataService();
-        this.studentService = new StudentDataService();
-        this.gradeService = new GradeDataService();
-        this.subjectService = new SubjectDataService();
+        this.userService = new UserDbService();
+        this.authService = new AuthDbService();
+        this.studentService = new StudentDbService();
+        this.subjectService = new SubjectDbService();
+        this.teacherService = new TeacherDbService();
+        this.gradeService = new GradeDBService();
     }
 
     private configureExpressRouter(): void {
         this.expressRouter = new ExpressRouter(
             this.userService,
-            this.teacherService,
+            this.authService,
             this.studentService,
+            this.subjectService,
+            this.teacherService,
             this.gradeService,
             this.subjectService,
         );
     }
 
     private configureServer(): void {
-            this.server = new ExpressServer(
+        this.server = new ExpressServer(
             this.allowedMainOrigin,
             this.expressRouter,
             this.port,
-        );    
-    }
-
-    private configureDb(): void {
-        const host = process.env.HOST;
-        const user = process.env.USER;
-        const password = process.env.PASSWORD;
-        const database = process.env.DATABASE;
-
-        this.expressDb = new ExpressDb(host!, user!, password!, database!);
+        );
     }
 }

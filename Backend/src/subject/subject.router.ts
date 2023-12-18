@@ -1,23 +1,21 @@
 import { Router } from 'express';
-import { TeacherController } from './teacher.controller';
+import { SubjectController } from './subject.controller';
 
-export class TeacherRouter {
+export class SubjectRouter {
     router = Router();
 
-    constructor(private teacherController: TeacherController) {
+    constructor(private subjectController: SubjectController) {
         this.configureRoutes();
     }
 
     private configureRoutes(): void {
         this.router.post('/', async (req, res, next) => {
-            const { name, email, subjectId, password } = req.body;
+            const { name, coefficient } = req.body;
 
             try {
-                const result = await this.teacherController.add(
+                const result = await this.subjectController.add(
                     name,
-                    email,
-                    subjectId,
-                    password,
+                    coefficient,
                 );
 
                 res.json(result);
@@ -28,7 +26,7 @@ export class TeacherRouter {
 
         this.router.get('/', async (req, res, next) => {
             try {
-                const result = await this.teacherController.getAll();
+                const result = await this.subjectController.getAll();
 
                 res.json(result);
             } catch (error: unknown) {
@@ -40,7 +38,7 @@ export class TeacherRouter {
             const id = +req.params.id;
 
             try {
-                const result = await this.teacherController.getById(id);
+                const result = await this.subjectController.getById(id);
 
                 res.json(result);
             } catch (error: unknown) {
@@ -50,15 +48,13 @@ export class TeacherRouter {
 
         this.router.put('/:id', async (req, res, next) => {
             const id = +req.params.id;
-            const { name, email, subjectId, password } = req.body;
+            const { name, coefficient } = req.body;
 
             try {
-                const result = await this.teacherController.update(
+                const result = await this.subjectController.update(
                     id,
                     name,
-                    email,
-                    subjectId,
-                    password,
+                    coefficient,
                 );
 
                 res.json(result);
@@ -66,18 +62,20 @@ export class TeacherRouter {
                 next(error);
             }
         });
-        //     const id = +req.params.id;
 
-        //     try {
-        //         await this.subjectController.delete(id);
+        this.router.delete('/:id', async (req, res, next) => {
+            const id = +req.params.id;
 
-        //         res.json({
-        //             success: true,
-        //             message: 'Subject deleted successfully.',
-        //         });
-        //     } catch (error: unknown) {
-        //         next(error);
-        //     }
-        // });
+            try {
+                await this.subjectController.delete(id);
+
+                res.json({
+                    success: true,
+                    message: 'Subject deleted successfully.',
+                });
+            } catch (error: unknown) {
+                next(error);
+            }
+        });
     }
 }

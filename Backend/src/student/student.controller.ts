@@ -1,24 +1,88 @@
+import { BadInputError } from '../exceptions/bad-input-error';
+import {
+    isNumberDecimal,
+    isNumberNegative,
+    isStrictlyNaN,
+    isStringEmpty,
+} from '../utils';
 import { Student } from './student';
 import { StudentService } from './student.service';
 
 export class StudentController {
     constructor(private studentService: StudentService) {}
 
-    add(username: string): Student {
-        // is the username empty ?
-        // is the username whitespaced ?
-        // other checks...
-        return this.studentService.add(username);
+    async add(name: string, email: string, password: string): Promise<Student> {
+        try {
+            if (
+                isStringEmpty(name) ||
+                isStringEmpty(email) ||
+                isStringEmpty(password)
+            ) {
+                throw new BadInputError(
+                    'Name, email and password are required',
+                );
+            }
+
+            const student = await this.studentService.add(
+                name,
+                email,
+                password,
+            );
+
+            return student;
+        } catch (error: unknown) {
+            throw error;
+        }
     }
 
-    getById(id: number): Student | null {
-        // is the id a decimal ?
-        // is the id a negative number ?
-        // other checks...
-        return this.studentService.getById(id);
+    async getAll(): Promise<Student[]> {
+        try {
+            const students = await this.studentService.getAll();
+            return students;
+        } catch (error: unknown) {
+            throw error;
+        }
     }
 
-    delete(id: number): void {
-        return this.studentService.delete(id);
+    async getById(id: number): Promise<Student> {
+        try {
+            if (isStrictlyNaN(id)) {
+                throw new BadInputError('Given id is not a number.');
+            }
+
+            if (isNumberDecimal(id)) {
+                throw new BadInputError('Given id is a decimal.');
+            }
+
+            if (isNumberNegative(id)) {
+                throw new BadInputError('Given id is negative.');
+            }
+
+            const student = await this.studentService.getById(id);
+
+            return student;
+        } catch (error: unknown) {
+            throw error;
+        }
+    }
+
+    async delete(id: number): Promise<void> {
+        try {
+            if (isStrictlyNaN(id)) {
+                throw new BadInputError('Given id is not a number.');
+            }
+
+            if (isNumberDecimal(id)) {
+                throw new BadInputError('Given id is a decimal.');
+            }
+
+            if (isNumberNegative(id)) {
+                throw new BadInputError('Given id is negative.');
+            }
+
+            await this.studentService.delete(id);
+        } catch (error: unknown) {
+            throw error;
+        }
     }
 }

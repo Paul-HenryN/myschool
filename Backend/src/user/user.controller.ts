@@ -1,69 +1,62 @@
+import { BadInputError } from '../exceptions/bad-input-error';
+import {
+    isNumberDecimal,
+    isNumberNegative,
+    isStrictlyNaN,
+    isStringEmpty,
+} from '../utils';
 import { User } from './user';
 import { UserService } from './user.service';
 
 export class UserController {
     constructor(private userService: UserService) {}
 
-    async add(name: string, email: string, password: string): Promise<User> {
+    async getAll(): Promise<User[]> {
         try {
-            // Vérification de la présence du nom, de l'email et du mot de passe
-            if (!name || !email || !password) {
-                throw new Error('Name, email, and password are required');
-            }
+            const users = await this.userService.getAll();
 
-            // Vérification de la validité de l'email
-            const emailRegex = /^[A-Za-z0-9._%-]+@myschool\.net$/;
-            if (!emailRegex.test(email)) {
-                throw new Error('Invalid email format');
-            }
-
-            // Vérification si l'email existe déjà
-            const existingUser = await this.userService.getByEmail(email);
-            if (existingUser) {
-                throw new Error('Email already exists');
-            }
-
-            // Si toutes les vérifications passent, appeler le service pour ajouter l'utilisateur
-            return await this.userService.add(name, email, password);
-        } catch (error) {
+            return users;
+        } catch (error: unknown) {
             throw error;
         }
     }
 
-    updatePassword(email: string, password: string): Promise<User | null> {
-        try{
-            if (!password) {
-                throw new Error('password are required');
+    async getById(id: number): Promise<User> {
+        try {
+            if (isStrictlyNaN(id)) {
+                throw new BadInputError('Given id is not a number.');
             }
-            return this.userService.updatePassword(email, password);
-        } catch (error) {
+
+            if (isNumberDecimal(id)) {
+                throw new BadInputError('Given id is a decimal.');
+            }
+
+            if (isNumberNegative(id)) {
+                throw new BadInputError('Given id is negative.');
+            }
+
+            return await this.userService.getById(id);
+        } catch (error: unknown) {
             throw error;
         }
     }
-    
-    getAllEmail(): Promise<String[] | null> {
-        return this.userService.getAllEmail();
-    }
 
-    delete(email: string): Promise<string> {
-        return this.userService.delete(email);
-    }
-
-    async login(email: string, password: string):  Promise<string | null> {
+    async delete(id: number): Promise<void> {
         try {
-            // Vérification de la présence du nom, de l'email et du mot de passe
-            if (!email || !password) {
-                throw new Error('Name, email, and password are required');
+            if (isStrictlyNaN(id)) {
+                throw new BadInputError('Given id is not a number.');
             }
 
-            // Vérification de la validité de l'email
-            const emailRegex = /^[A-Za-z0-9._%-]+@myschool\.net$/;
-            if (!emailRegex.test(email)) {
-                throw new Error('Invalid email format');
+            if (isNumberDecimal(id)) {
+                throw new BadInputError('Given id is a decimal.');
             }
 
-            return this.userService.login(email, password);
-        } catch (error) {
+            if (isNumberNegative(id)) {
+                throw new BadInputError('Given id is negative.');
+            }
+
+            await this.userService.delete(id);
+        } catch (error: unknown) {
             throw error;
         }
     }

@@ -9,30 +9,54 @@ export class StudentRouter {
     }
 
     private configureRoutes(): void {
-        this.router.get('/:id', (req, res, next) => {
+        this.router.post('/', async (req, res, next) => {
+            const { name, email, password } = req.body;
+
             try {
-                const result = this.studentController.getById(
-                    parseInt(req.params.id),
+                const result = await this.studentController.add(
+                    name,
+                    email,
+                    password,
                 );
-                res.status(200).json(result);
+
+                res.json(result);
             } catch (error: unknown) {
                 next(error);
             }
         });
 
-        this.router.post('/add-user', (req, res, next) => {
+        this.router.get('/', async (req, res, next) => {
             try {
-                const result = this.studentController.add(req.body.username);
-                res.status(200).json(result);
+                const result = await this.studentController.getAll();
+
+                res.json(result);
+            } catch (error: unknown) {
+                throw error;
+            }
+        });
+
+        this.router.get('/:id', async (req, res, next) => {
+            const id = +req.params.id;
+
+            try {
+                const result = await this.studentController.getById(id);
+
+                res.json(result);
             } catch (error: unknown) {
                 next(error);
             }
         });
 
-        this.router.delete('/:id', (req, res, next) => {
+        this.router.delete('/:id', async (req, res, next) => {
+            const id = +req.params.id;
+
             try {
-                this.studentController.delete(parseInt(req.params.id));
-                res.status(200).json();
+                await this.studentController.delete(id);
+
+                res.json({
+                    success: true,
+                    message: 'Student deleted successfully.',
+                });
             } catch (error: unknown) {
                 next(error);
             }

@@ -209,4 +209,11 @@ export class GradeController {
             throw error;
         }
     }
+    updatevalue(
+        ids: number,
+        ide: number,
+        newvalue: number,
+    ): Promise<Grade | null> {
+        return this.gradeService.updatevalue(ids, ide, newvalue);
+    }
 }

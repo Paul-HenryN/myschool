@@ -41,16 +41,18 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div id="myfooter">
-    <div id="text" class="container">
+  <div class="mytext">
+    <div class="text container">
       <p> 
         <form @submit.prevent="handleSubmit">
           <div class="form-group">
-            <label for="name">Veuillez saisir l'adresse mail de l'administrateur à supprimer:</label>
-            <input class="input" type="name" id="name" v-model="email" required />
+            <label for="name">Veuillez saisir choisir le mail de l'utilisateur à supprimer:</label>
+            <select class="input button buttonselect" id="name" v-model="email" required>
+            <!-- <option v-for="subject in subjects" :key="user.id" :value="user.id">{{ email }}</option> -->
+            </select>
           </div>
           <div class="form-group">
-            <label for="name">Veuillez resaisir l'adresse mail de l'administrateur à supprimer:</label>
+            <label for="name">Veuillez saisir l'adresse mail afin de valider la supression:</label>
             <input class="input" type="name" id="name" v-model="remail" required/>
           </div>
 
@@ -72,4 +74,8 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
+.buttonselect{
+  width: 100%;
+  background-color: #36a5dd;
+}
 </style>

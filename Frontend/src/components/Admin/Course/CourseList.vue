@@ -3,10 +3,15 @@ import { redirectTo } from '@/main';
 import axios from 'axios';
 import { ref, defineProps, defineEmits, onMounted } from 'vue';
 
+interface Cours {
+  id: number;
+  name: string;
+  coefficient: string;
+}
 
 const emits = defineEmits();
 
-const teachers = ref([]);
+const cours = ref<Cours[]>([]);
 
 const errors = ref('');
 const axiosInstance = axios.create();
@@ -21,8 +26,8 @@ axiosInstance.interceptors.request.use((config) => {
 
 onMounted(async () => {
   try {
-    const response = await axiosInstance.get(`http://localhost:3000/api/user`);
-    teachers.value = response.data;
+    const response = await axiosInstance.get(`http://localhost:3000/api/subjects`);
+    cours.value = response.data;
     console.log('Réponse de l\'API :', response.data);
   } catch (error) {
     // Gérez les erreurs ici
@@ -39,12 +44,14 @@ onMounted(async () => {
       <table>
         <thead>
           <tr>
-            <th>Adresse différents cours</th>
+            <th>Noms des différents cours</th>
+            <th>Coefficient</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="teacher in teachers">
-            <td>{{ teacher }}</td>
+          <tr v-for="cour in cours" :key="cour.id">
+            <td>{{ cour.name }}</td>
+            <td>{{ cour.coefficient }}</td>
           </tr>
         </tbody>
       </table>

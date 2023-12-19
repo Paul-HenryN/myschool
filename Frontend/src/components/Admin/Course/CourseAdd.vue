@@ -3,12 +3,12 @@ import { redirectTo } from '@/main';
 import axios from 'axios';
 import { ref, defineProps, defineEmits } from 'vue';
 
-
 const emits = defineEmits();
 
+
 const name = ref('');
-const email = ref('');
-const password = ref('');
+const coefficient = ref('');
+
 const success = ref('');
 const errors = ref('');
 const axiosInstance = axios.create();
@@ -23,17 +23,19 @@ axiosInstance.interceptors.request.use((config) => {
 
 const handleSubmit = async () => {
   try {
-    const response = await axiosInstance.post(`http://localhost:3000/api/user/add-user`, {
+    const response = await axiosInstance.post(`http://localhost:3000/api/subjects`, {
       name: name.value,
-      email: email.value,
-      password: password.value,
+      coefficient: coefficient.value,
     });
     console.log('Réponse de l\'API :', response.data);
     success.value = 'Administrateur ajouter avec succès.';
+
+    name.value = '';
+    coefficient.value = '';
   } catch (error) {
     // Gérez les erreurs ici
-    console.error('Erreur, administrateur pas ajouté :', error);
-    errors.value = 'Erreur, administrateur pas ajouté';
+    console.error('Erreur, cours pas ajouté :', error);
+    errors.value = 'Erreur, cours pas ajouté';
     emits('onError', errors.value);
   }
 };
@@ -44,16 +46,12 @@ const handleSubmit = async () => {
     <div class="text container">
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
-            <label for="name">Veuillez saisir l'intitulé du cours à ajouter:</label>
+            <label for="name">Veuillez saisir l'intitulé de la matière à ajouter:</label>
             <input class="input" type="name" id="name" v-model="name" required />
         </div>
         <div class="form-group">
-            <label for="email">Veuillez choisir le professeur donnant ce cours:</label>
-            <input class="input" type="email" id="email" v-model="email" required />
-        </div>
-        <div class="form-group">
-            <label for="password">Veuillez saisir le mot de passe de l'élève à ajouter:</label>
-            <input class="input" type="password" id="password" v-model="password" required />
+            <label for="email">Veuillez entrer le coefficient de la matière:</label>
+            <input class="input" type="number" id="coefficient" v-model="coefficient" required />
         </div>
 
         <div class="form-group">

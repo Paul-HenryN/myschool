@@ -51,6 +51,7 @@ table {
 thead {
   background-color: #36a5dd;
   color: white;
+  text-align: left;
 }
 
 th, td {
@@ -79,6 +80,7 @@ label {
   display: block;
   margin-bottom: 5px;
   color: #00367d;
+  font-size: 15px;
 }
 
 input {

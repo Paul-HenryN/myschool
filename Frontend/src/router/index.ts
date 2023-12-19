@@ -30,25 +30,25 @@ const router = createRouter({
     {
       path: '/admin/modifier-mot-de-passe',
       name: 'modAdmin',
-      component: () => import('../views/Admin/AdministrateurView/AdminMDPView.vue'),
+      component: () => import('../views/Admin/UserView/UserMDPView.vue'),
       beforeEnter: requireAuth 
     },
     {
       path: '/admin/ajout-administrateur',
       name: 'ajoutAdmin',
-      component: () => import('../views/Admin/AdministrateurView/AdminAddView.vue'),
+      component: () => import('../views/Admin/UserView/UserAddView.vue'),
       beforeEnter: requireAuth 
     },
     {
       path: '/admin/liste-administrateurs',
       name: 'ListAdmin',
-      component: () => import('../views/Admin/AdministrateurView/AdminListView.vue'),
+      component: () => import('../views/Admin/UserView/UserListView.vue'),
       beforeEnter: requireAuth 
     },
     {
       path: '/admin/suprimer-administrateur',
       name: 'SupAdmin',
-      component: () => import('../views/Admin/AdministrateurView/AdminSupView.vue'),
+      component: () => import('../views/Admin/UserView/UserSupView.vue'),
       beforeEnter: requireAuth 
     },
 

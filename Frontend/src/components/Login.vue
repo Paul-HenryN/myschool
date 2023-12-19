@@ -11,10 +11,6 @@ const email = ref('');
 const password = ref('');
 const router = useRouter();
 
-const isAdmin = ref(false);
-const isTeacher = ref(false);
-const isStudent = ref(false);
-
 const errors = ref('');
 const axiosInstance = axios.create();
 
@@ -28,48 +24,17 @@ axiosInstance.interceptors.request.use((config) => {
 
 const handleSubmit = async () => {
   try {
-    let response;
-
-    if (isAdmin.value) {
-      response = await axiosInstance.post('http://localhost:3000/api/user/login', {
-        email: email.value,
-        password: password.value,
-      });
-      const token = response.data.token;
-      console.log('Réponse de l\'API :', response.data);
-      localStorage.setItem('token', token);
-      console.log('Redirection vers /admin');
-      router.push('/admin');
-      emits('onLogin', response.data);
-      return;
-    }else if (isTeacher.value) {
-      response = await axiosInstance.post('http://localhost:3000/api/teacher/login', {
-        email: email.value,
-        password: password.value,
-      });
-      console.log('Réponse de l\'API (enseignant) :', response.data);
-      const token = response.data.token;
-      localStorage.setItem('token', token);
-      router.push('/enseignant');
-      emits('onLogin', response.data);
-      return;
-    }else if (isStudent.value) {
-      response = await axiosInstance.post('http://localhost:3000/api/student/login', {
-        email: email.value,
-        password: password.value,
-      });
-      console.log('Réponse de l\'API (élève) :', response.data);
-      const token = response.data.token;
-      localStorage.setItem('token', token);
-      router.push('/eleve');
-      emits('onLogin', response.data);
-    } else {
-      // Aucune correspondance trouvée pour le type d'utilisateur
-      console.error('Aucune correspondance trouvée pour le type d\'utilisateur.');
-      errors.value = 'Erreur de connexion. Veuillez vérifier vos informations.';
-      emits('onError', errors.value);
-      return;
-    }
+    const response = await axiosInstance.post('http://localhost:3000/api/login', {
+      email: email.value,
+      password: password.value,
+    });
+    const token = response.data.token;
+    console.log('Réponse de l\'API :', response.data);
+    localStorage.setItem('token', token);
+    console.log('Redirection vers /admin');
+    router.push('/admin');
+    emits('onLogin', response.data);
+    return;
   } catch (error) {
     // Gérez les erreurs ici
     console.error('Erreur lors de la connexion :', error);
@@ -100,14 +65,6 @@ const handleSubmit = async () => {
               <input class="input" type="password" id="password" v-model="password" required />
             </div>
 
-            <div class="form-group checkboxes">
-              <input type="checkbox" id="isAdmin" v-model="isAdmin" />
-              <label for="isAdmin">Admin</label>
-              <input type="checkbox" id="isTeacher" v-model="isTeacher" />
-              <label for="isTeacher">Enseignant</label>
-              <input type="checkbox" id="isStudent" v-model="isStudent" />
-              <label for="isStudent">Étudiant</label>
-            </div>
 
             <div class="form-group">
               <div class="button">
@@ -193,15 +150,6 @@ button {
 
 button:hover {
   background-color: #36a5dd;
-}
-
-.checkboxes {
-  display: flex;
-  align-items: center;
-}
-
-.checkboxes label {
-  margin-right: 10px; /* Marge entre les labels */
 }
 </style>
 

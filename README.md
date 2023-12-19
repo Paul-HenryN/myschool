@@ -24,17 +24,12 @@ Projet renforcement full js
 {
   "name": "Administrateur",
   "email": "administrateur@myschool.net",
-  "password": "AdminSecretPassword123"
+  "password": "AdminSecretPassword1234"
 }
 
-{
-  "name": "AdministrateurTest",
-  "email": "administrateurtest@myschool.net",
-  "password": "AdminSecretPassword123"
-}
 
 {
   "name": "TeacherTest",
   "email": "teachertest@myschool.net",
-  "password": "teacherSecretPassword123"
+  "password": "teacherSecretPassword1234"
 }

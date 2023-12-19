@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import Header from '../../../components/Admin/Header.vue'
-import Sup from '../../../components/Admin/Administrateur/AdminSup.vue'
+import Add from '../../../components/Admin/Users/UserAdd.vue'
 import Footer from '../../../components/Footer.vue'
 </script>
 
 <template>
   <main>
     <Header />
-    <Sup />
+    <Add />
     <Footer />
   </main>
 </template>

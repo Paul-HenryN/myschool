@@ -18,10 +18,10 @@ const handleAction = (event: Event) => {
         <div class="row">
           <div class="col-md-6 logo">
             <img src="@/assets/static/MY SCHOOL.png" alt="Logo MySchool" />
-            <u>Administrateur</u>
+            Administrateur
           </div>
           <div class="col-md-6 user-info">
-            Administrateur 001
+            Bienvenue dans votre interface
           </div>
         </div>
       </div>
@@ -48,10 +48,10 @@ const handleAction = (event: Event) => {
           <option value="modcours">Modifier cours</option>
         </select>
         <select class="button" @change="handleAction">
-          <option value="" disabled selected> Gérer l'administration</option>
-          <option value="ajoutAdmin">Ajouter un administrateur</option>
-          <option value="ListAdmin">Liste des administrateurs</option>
-          <option value="SupAdmin">Supprimer administrateur</option>
+          <option value="" disabled selected> Gérer les utilisateurs</option>
+          <option value="ListAdmin">Liste des utilisateurs</option>
+          <option value="ajoutAdmin">Ajouter un utilisateur</option>
+          <option value="SupAdmin">Supprimer un utilisateur</option>
           <option value="modAdmin">Modifier mot de passe</option>
         </select>
       </div>

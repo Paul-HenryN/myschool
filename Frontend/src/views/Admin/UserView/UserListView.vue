@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import Header from '../../../components/Admin/Header.vue'
-import Password from '../../../components/Admin/Administrateur/AdminMDP.vue'
+import List from '../../../components/Admin/Users/UserList.vue'
 import Footer from '../../../components/Footer.vue'
 </script>
 
 <template>
   <main>
     <Header />
-    <Password />
+    <List />
     <Footer />
   </main>
 </template>

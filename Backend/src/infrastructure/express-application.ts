@@ -25,7 +25,6 @@ export class ExpressApplication {
     private subjectService!: SubjectService;
     private teacherService!: TeacherService;
     private gradeService!: GradeService;
-    private subjectService!: SubjectService;
 
     constructor() {
         this.configureApplication();
@@ -97,7 +96,6 @@ export class ExpressApplication {
             this.subjectService,
             this.teacherService,
             this.gradeService,
-            this.subjectService,
         );
     }
 

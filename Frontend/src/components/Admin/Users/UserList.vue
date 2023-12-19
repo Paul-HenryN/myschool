@@ -3,10 +3,19 @@ import { redirectTo } from '@/main';
 import axios from 'axios';
 import { ref, defineProps, defineEmits, onMounted } from 'vue';
 
+interface Admin {
+  id: number;
+  name: string;
+  email: string;
+  role: {
+    id: number;
+    name: string;
+  };
+}
 
 const emits = defineEmits();
 
-const admins = ref([]);
+const admins = ref<Admin[]>([]);
 
 const errors = ref('');
 const axiosInstance = axios.create();
@@ -21,7 +30,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 onMounted(async () => {
   try {
-    const response = await axiosInstance.get(`http://localhost:3000/api/user`);
+    const response = await axiosInstance.get(`http://localhost:3000/api/users`);
     admins.value = response.data;
     console.log('Réponse de l\'API :', response.data);
   } catch (error) {
@@ -31,14 +40,7 @@ onMounted(async () => {
     emits('onError', errors.value);
   }
 });
-const handleAction = (event: Event) => {
-  const selectedOption = (event.target as HTMLSelectElement).value;
-  console.log('Action sélectionnée :', selectedOption);
-  if (selectedOption) {
-    // Passez la valeur sélectionnée à la fonction redirectTo
-    redirectTo(selectedOption);
-  }
-};
+
 </script>
 
 <template>
@@ -47,12 +49,16 @@ const handleAction = (event: Event) => {
       <table>
         <thead>
           <tr>
-            <th>Adresse mails des administrateurs</th>
+            <th>Nom</th>
+            <th>Adresse e-mail</th>
+            <th>Rôle</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="admin in admins">
-            <td>{{ admin }}</td>
+          <tr v-for="admin in admins" :key="admin.id">
+            <td>{{ admin.name }}</td>
+            <td>{{ admin.email }}</td>
+            <td>{{ admin.role.name }}</td>
           </tr>
         </tbody>
       </table>

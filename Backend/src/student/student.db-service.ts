@@ -111,28 +111,4 @@ export class StudentDbService implements StudentService {
             await prisma.$disconnect();
         }
     }
-
-    async delete(id: number): Promise<void> {
-        try {
-            const student = await prisma.student.findUnique({
-                where: {
-                    userId: id,
-                },
-            });
-
-            if (!student) {
-                throw new NotFoundError('Student not found');
-            }
-
-            await prisma.student.delete({
-                where: {
-                    userId: id,
-                },
-            });
-        } catch (error: unknown) {
-            throw error;
-        } finally {
-            await prisma.$disconnect();
-        }
-    }
 }

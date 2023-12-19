@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { StudentController } from './student.controller';
+import { AdminController } from './admin.controller';
 
-export class StudentRouter {
+export class AdminRouter {
     router = Router();
 
-    constructor(private studentController: StudentController) {
+    constructor(private adminController: AdminController) {
         this.configureRoutes();
     }
 
@@ -13,7 +13,7 @@ export class StudentRouter {
             const { name, email, password } = req.body;
 
             try {
-                const result = await this.studentController.add(
+                const result = await this.adminController.add(
                     name,
                     email,
                     password,
@@ -27,7 +27,7 @@ export class StudentRouter {
 
         this.router.get('/', async (req, res, next) => {
             try {
-                const result = await this.studentController.getAll();
+                const result = await this.adminController.getAll();
 
                 res.json(result);
             } catch (error: unknown) {
@@ -39,7 +39,7 @@ export class StudentRouter {
             const id = +req.params.id;
 
             try {
-                const result = await this.studentController.getById(id);
+                const result = await this.adminController.getById(id);
 
                 res.json(result);
             } catch (error: unknown) {

@@ -5,13 +5,13 @@ import {
     isStrictlyNaN,
     isStringEmpty,
 } from '../utils';
-import { Student } from './student';
-import { StudentService } from './student.service';
+import { Admin } from './admin';
+import { AdminService } from './admin.service';
 
-export class StudentController {
-    constructor(private studentService: StudentService) {}
+export class AdminController {
+    constructor(private adminService: AdminService) {}
 
-    async add(name: string, email: string, password: string): Promise<Student> {
+    async add(name: string, email: string, password: string): Promise<Admin> {
         try {
             if (
                 isStringEmpty(name) ||
@@ -23,28 +23,24 @@ export class StudentController {
                 );
             }
 
-            const student = await this.studentService.add(
-                name,
-                email,
-                password,
-            );
+            const admin = await this.adminService.add(name, email, password);
 
-            return student;
+            return admin;
         } catch (error: unknown) {
             throw error;
         }
     }
 
-    async getAll(): Promise<Student[]> {
+    async getAll(): Promise<Admin[]> {
         try {
-            const students = await this.studentService.getAll();
-            return students;
+            const admins = await this.adminService.getAll();
+            return admins;
         } catch (error: unknown) {
             throw error;
         }
     }
 
-    async getById(id: number): Promise<Student> {
+    async getById(id: number): Promise<Admin> {
         try {
             if (isStrictlyNaN(id)) {
                 throw new BadInputError('Given id is not a number.');
@@ -58,9 +54,9 @@ export class StudentController {
                 throw new BadInputError('Given id is negative.');
             }
 
-            const student = await this.studentService.getById(id);
+            const admin = await this.adminService.getById(id);
 
-            return student;
+            return admin;
         } catch (error: unknown) {
             throw error;
         }

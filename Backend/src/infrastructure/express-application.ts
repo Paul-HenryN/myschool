@@ -13,6 +13,8 @@ import { TeacherService } from '../teacher/teacher.service';
 import { TeacherDbService } from '../teacher/teacher.db-service';
 import { GradeService } from '../grade/grade.service';
 import { GradeDBService } from '../grade/grade.db-service';
+import { AdminService } from '../admin/admin.service';
+import { AdminDbService } from '../admin/admin.db-service';
 
 export class ExpressApplication {
     private allowedMainOrigin!: string;
@@ -25,6 +27,7 @@ export class ExpressApplication {
     private subjectService!: SubjectService;
     private teacherService!: TeacherService;
     private gradeService!: GradeService;
+    private adminService!: AdminService;
 
     constructor() {
         this.configureApplication();
@@ -86,6 +89,7 @@ export class ExpressApplication {
         this.subjectService = new SubjectDbService();
         this.teacherService = new TeacherDbService();
         this.gradeService = new GradeDBService();
+        this.adminService = new AdminDbService();
     }
 
     private configureExpressRouter(): void {
@@ -96,6 +100,7 @@ export class ExpressApplication {
             this.subjectService,
             this.teacherService,
             this.gradeService,
+            this.adminService,
         );
     }
 

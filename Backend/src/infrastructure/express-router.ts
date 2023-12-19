@@ -18,6 +18,9 @@ import { TeacherService } from '../teacher/teacher.service';
 import { GradeController } from '../grade/grade.controller';
 import { GradeRouter } from '../grade/grade.router';
 import { GradeService } from '../grade/grade.service';
+import { AdminRouter } from '../admin/admin.router';
+import { AdminController } from '../admin/admin.controller';
+import { AdminService } from '../admin/admin.service';
 
 export class ExpressRouter {
     router = Router();
@@ -34,6 +37,8 @@ export class ExpressRouter {
     private teacherRouter!: TeacherRouter;
     private gradeController!: GradeController;
     private gradeRouter!: GradeRouter;
+    private adminController!: AdminController;
+    private adminRouter!: AdminRouter;
 
     constructor(
         private userService: UserService,
@@ -42,6 +47,7 @@ export class ExpressRouter {
         private subjectService: SubjectService,
         private teacherService: TeacherService,
         private gradeService: GradeService,
+        private adminService: AdminService,
     ) {
         this.configureControllers();
         this.configureRouters();
@@ -55,6 +61,7 @@ export class ExpressRouter {
         this.subjectController = new SubjectController(this.subjectService);
         this.teacherController = new TeacherController(this.teacherService);
         this.gradeController = new GradeController(this.gradeService);
+        this.adminController = new AdminController(this.adminService);
     }
 
     private configureRouters(): void {
@@ -64,6 +71,7 @@ export class ExpressRouter {
         this.subjectRouter = new SubjectRouter(this.subjectController);
         this.teacherRouter = new TeacherRouter(this.teacherController);
         this.gradeRouter = new GradeRouter(this.gradeController);
+        this.adminRouter = new AdminRouter(this.adminController);
     }
 
     private configureRoutes(): void {
@@ -77,5 +85,6 @@ export class ExpressRouter {
         this.router.use('/subjects', this.subjectRouter.router);
         this.router.use('/teachers', this.teacherRouter.router);
         this.router.use('/grades', this.gradeRouter.router);
+        this.router.use('/admin', this.adminRouter.router);
     }
 }

@@ -166,7 +166,7 @@ export class TeacherDbService implements TeacherService {
             });
 
             if (!teacher) {
-                throw new BadInputError('Teacher not found');
+                throw new NotFoundError('Teacher not found');
             }
 
             if (teacher.user.email !== email) {
@@ -176,7 +176,9 @@ export class TeacherDbService implements TeacherService {
                     },
                 });
 
-                if (existingUser) {
+                console.log(existingUser);
+
+                if (existingUser !== null) {
                     throw new BadInputError('Email already taken');
                 }
             }

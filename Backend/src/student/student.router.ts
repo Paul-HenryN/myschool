@@ -46,20 +46,5 @@ export class StudentRouter {
                 next(error);
             }
         });
-
-        this.router.delete('/:id', async (req, res, next) => {
-            const id = +req.params.id;
-
-            try {
-                await this.studentController.delete(id);
-
-                res.json({
-                    success: true,
-                    message: 'Student deleted successfully.',
-                });
-            } catch (error: unknown) {
-                next(error);
-            }
-        });
     }
 }

@@ -65,24 +65,4 @@ export class StudentController {
             throw error;
         }
     }
-
-    async delete(id: number): Promise<void> {
-        try {
-            if (isStrictlyNaN(id)) {
-                throw new BadInputError('Given id is not a number.');
-            }
-
-            if (isNumberDecimal(id)) {
-                throw new BadInputError('Given id is a decimal.');
-            }
-
-            if (isNumberNegative(id)) {
-                throw new BadInputError('Given id is negative.');
-            }
-
-            await this.studentService.delete(id);
-        } catch (error: unknown) {
-            throw error;
-        }
-    }
 }

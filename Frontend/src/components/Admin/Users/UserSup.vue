@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { redirectTo } from '@/main';
 import axios from 'axios';
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, onMounted } from 'vue';
 
+interface Users {
+  "id": number;
+  "email": string;
+  "name" : string;
+}
 
 const emits = defineEmits();
 
-const email = ref('');
-const remail = ref('');
+const users = ref<Users[]>([]);
+const selectedUser = ref<number | null>(null);
+
 const errors = ref('');
 const success = ref('');
 const axiosInstance = axios.create();
@@ -20,17 +25,26 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
+onMounted(async () => {
+  try {
+    const response = await axiosInstance.get(`http://localhost:3000/api/users`);
+    users.value = response.data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des matières :', error);
+    emits('onError', 'Erreur lors de la récupération des matières.');
+  }
+});
+
 const handleSubmit = async () => {
   try {
-    if (email.value !== remail.value) {
-      errors.value = 'Les deux emails ne sont pas identiques.';
+    if (!selectedUser.value) {
+      errors.value = 'Veuillez choisir un utilisateur.';
       return;
     }
-
-    const response = await axiosInstance.delete(`http://localhost:3000/api/user/${encodeURIComponent(email.value)}`, {
+    const response = await axiosInstance.delete(`http://localhost:3000/api/users/${selectedUser.value}`, {
     });
     console.log('Réponse de l\'API :', response.data);
-    success.value = 'Si un administrateur avec ce mail a été trouvé dans la base de donné, il a été suprimé avec succès.';
+    success.value = 'Administrateur supprimé avec succès.';
   } catch (error) {
     // Gérez les erreurs ici
     console.error('Erreur lors de la suppression :', error);
@@ -46,14 +60,10 @@ const handleSubmit = async () => {
       <p> 
         <form @submit.prevent="handleSubmit">
           <div class="form-group">
-            <label for="name">Veuillez saisir choisir le mail de l'utilisateur à supprimer:</label>
-            <select class="input button buttonselect" id="name" v-model="email" required>
-            <!-- <option v-for="subject in subjects" :key="user.id" :value="user.id">{{ email }}</option> -->
+            <label for="name">Veuillez choisir le mail de l'utilisateur à supprimer:</label>
+            <select class="input button buttonselect" id="name" v-model="selectedUser" required>
+              <option v-for="user in users" :key="user.id" :value="user.id">{{ user.email }}</option>
             </select>
-          </div>
-          <div class="form-group">
-            <label for="name">Veuillez saisir l'adresse mail afin de valider la supression:</label>
-            <input class="input" type="name" id="name" v-model="remail" required/>
           </div>
 
           <div class="form-group">
@@ -62,7 +72,6 @@ const handleSubmit = async () => {
           </div>
           </div>
 
-          <div v-if="email!=remail" class="error">le deux mail entrées ne sont pas identiques</div>
           <div v-if="success" class="success">{{ success }}</div>
           <div v-if="errors" class="error">{{ errors }}</div>
         </form>

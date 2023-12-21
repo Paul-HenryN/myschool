@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { redirectTo } from '@/main';
 import axios from 'axios';
 import { ref, defineProps, defineEmits, onMounted } from 'vue';
 
+interface Subjects {
+  id: number;
+  name: string;
+  coefficient: number;
+}
 
 const emits = defineEmits();
 
@@ -11,16 +15,12 @@ const email = ref('');
 const password = ref('');
 const repassword = ref('');
 
-const admin = ref(''); 
-const teacher = ref(''); 
-const student = ref(''); 
-
 const success = ref('');
 const errors = ref('');
 
 const role = ref('');
-const subjects = ref([]);
-const selectedSubject = ref(null);
+const subjects = ref<Subjects[]>([]);
+const selectedSubject = ref<number | null>(null); 
 
 const axiosInstance = axios.create();
 
@@ -46,30 +46,31 @@ const handleSubmit = async () => {
   try {
     let apiUrl = '';
 
-    switch (role) {
-      case admin:
-        apiUrl = 'http://localhost:3000/api/user';
-        break;
-      case teacher:
-        apiUrl = 'http://localhost:3000/api/teacher';
-        break;
-      case student:
-        apiUrl = 'http://localhost:3000/api/student';
-        break;
-      default:
-        throw new Error('Rôle non valide');
+    if (role.value === 'admin') {
+      apiUrl = 'http://localhost:3000/api/user';
+    } else if (role.value === 'teacher') {
+      apiUrl = 'http://localhost:3000/api/teachers';
+    } else if (role.value === 'student') {
+      apiUrl = 'http://localhost:3000/api/students';
+    } else {
+      throw new Error('Rôle non valide');
     }
 
     const response = await axiosInstance.post(apiUrl, {
       name: name.value,
       email: email.value,
       password: password.value,
-      role,
-      subject: role === teacher ? selectedSubject.value : undefined,
+      subjectId: role.value === 'teacher' ? selectedSubject.value : undefined,
     });
 
     console.log('Réponse de l\'API :', response.data);
     success.value = 'Utilisateur ajouté avec succès.';
+
+    name.value = '';
+    email.value = '';
+    password.value = '';
+    repassword.value = '';
+    selectedSubject.value = null;
   } catch (error) {
     // Gérez les erreurs ici
     console.error('Erreur, utilisateur pas ajouté :', error);
@@ -111,9 +112,9 @@ const handleSubmit = async () => {
         </div>
 
         <div v-if="role === 'teacher'" class="form-group">
-          <label for="subject">Matière enseignée :</label>
-          <select class="input button buttonselect" id="subject" v-model="subjects">
-            <!-- <option v-for="subject in subjects" :key="subject.id" :value="subject.id">{{ subject.name }}</option> -->
+          <label for="name">Matière enseignée :</label>
+          <select class="input button buttonselect" id="subject" v-model="selectedSubject">
+            <option v-for="subject in subjects" :key="subject.id" :value="subject.id">{{ subject.name }}</option>
           </select>
         </div>
 

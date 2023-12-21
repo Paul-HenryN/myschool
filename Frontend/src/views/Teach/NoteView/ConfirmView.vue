@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Header from '../../../components/Admin/Header.vue'
-import Add from '../../../components/Admin/Student/StudentAdd.vue'
+import Header from '../../../components/Teach/Header.vue'
+import Add from '../../../components/Teach/Notes/ConfirmationNotation.vue'
 import Footer from '../../../components/Footer.vue'
 </script>
 

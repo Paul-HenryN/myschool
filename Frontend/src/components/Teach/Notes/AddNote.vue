@@ -1,35 +1,61 @@
 <script setup lang="ts">
-import { redirectTo } from '@/main';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { ref, defineProps, defineEmits, onMounted } from 'vue';
 
+interface Student {
+  id: number;
+  name: string;
+  grade: number | null;
+}
 
-const emits = defineEmits();
+const students = ref<Student[]>([]);
+const success = ref('');
+const error = ref('');
 
-const teachers = ref([]);
-
-const errors = ref('');
-const axiosInstance = axios.create();
-
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-onMounted(async () => {
+const fetchStudents = async () => {
   try {
-    const response = await axiosInstance.get(`http://localhost:3000/api/user`);
-    teachers.value = response.data;
-    console.log('Réponse de l\'API :', response.data);
-  } catch (error) {
-    // Gérez les erreurs ici
-    console.error('Erreur lors de la récupération des élèves :', error);
-    errors.value = 'Erreur lors de la récupération des élèves.';
-    emits('onError', errors.value);
+    const response = await axios.get<Student[]>('http://localhost:3000/api/students');
+    students.value = response.data.map(student => ({ ...student, grade: null }));
+  } catch (err) {
+    console.error('Erreur lors de la récupération des élèves:', err);
+    error.value = 'Erreur lors de la récupération des élèves.';
   }
+};
+
+const handleSubmit = async (studentId: number, grade: number | null) => {
+  try {
+    if (grade === null || isNaN(grade) || grade < 0 || grade > 20) {
+      error.value = 'Veuillez saisir une note valide.';
+      return;
+    }
+
+    const teacherId = localStorage.getItem('teacherId');
+
+    if (!teacherId) {
+      error.value = 'Erreur d\'authentification de l\'enseignant.';
+      return;
+    }
+
+    const responseSubject = await axios.get(`http://localhost:3000/api/teachers/${teacherId}`);
+    const subjectId = responseSubject.data.subject.id;
+
+    const data = {
+      studentId,
+      subjectId,
+      value: grade,
+    };
+
+    const response = await axios.post('http://localhost:3000/api/grades', data);
+
+    success.value = 'Note enregistrée avec succès.';
+  } catch (err) {
+    console.error('Erreur lors de l\'enregistrement de la note, vous avez déjà noté cet élève :', err);
+    error.value = 'Erreur lors de l\'enregistrement de la note, vous avez déjà noté cet élève.';
+  }
+};
+
+onMounted(() => {
+  fetchStudents();
 });
 </script>
 
@@ -39,47 +65,29 @@ onMounted(async () => {
       <table>
         <thead>
           <tr>
-            <td>
-              Noms de l'élève
-            </td>
-            <td>
-              Notes
-            </td>
+            <th>Nom de l'élève</th>
+            <th>Note</th>
+            <th>Enregistrer</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="teacher in teachers">
-            <td>{{ teacher }}</td>
-            <td>{{ teacher }}</td>
+          <tr v-for="student in students" :key="student.id">
+            <td>{{ student.name }}</td>
+            <td>
+              <input type="number" v-model="student.grade" step="0.1" min="0" max="20" />
+            </td>
+            <td>
+              <button @click="handleSubmit(student.id, student.grade)">Enregistrer</button>
+            </td>
           </tr>
         </tbody>
       </table>
+      <div v-if="success" class="success">{{ success }}</div>
+      <div v-if="error" class="error">{{ error }}</div>
     </div>
-    
   </div>
-  
 </template>
 
 <style scoped>
-img{
-  width: 50px; 
-  height: auto; 
-}
-.icon{
-  width: 50px; 
-  height: auto; 
-}
-.logo{
-    font-style: italic;
-}
-.user-info{
-    text-align: right;
-    padding-top: 13px;
-    font-size: 15px; 
-}
-a {
-  text-decoration: none; 
-  color: white;          
-  cursor: pointer;       
-}
+/* Ajoutez vos styles CSS ici */
 </style>

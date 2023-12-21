@@ -28,6 +28,8 @@ onMounted(async () => {
   try {
     const response = await axiosInstance.get(`http://localhost:3000/api/subjects`);
     cours.value = response.data;
+    cours.value.sort((a, b) => a.name.localeCompare(b.name));
+
     console.log('Réponse de l\'API :', response.data);
   } catch (error) {
     // Gérez les erreurs ici

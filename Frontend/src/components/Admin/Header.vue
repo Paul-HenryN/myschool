@@ -28,17 +28,11 @@ const handleAction = (event: Event) => {
       <div class="second-bar">
         <select class="button" @change="handleAction">
           <option value="" disabled selected> Gérer les enseignants</option>
-          <option value="ajoutEns">Ajouter un enseignant</option>
           <option value="ListEns">Liste des enseignants</option>
-          <option value="SupEns">Supprimer un enseignant</option>
-          <option value="modEns">Modifier mot de passe</option>
         </select>
         <select class="button" @change="handleAction">
           <option value="" disabled selected> Gérer les élèves</option>
-          <option value="ajoutEle">Ajouter un élève</option>
           <option value="ListEle">Liste des élèves</option>
-          <option value="SupEle">Supprimer un élève</option>
-          <option value="modEle">Modifier l'élève</option>
         </select>
         <select class="button" @change="handleAction">
           <option value="" disabled selected> Gérer les cours</option>

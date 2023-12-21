@@ -1,50 +1,60 @@
 <script setup lang="ts">
-import { redirectTo } from '@/main';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { ref, defineProps, defineEmits } from 'vue';
 
+interface Student {
+  id: number;
+  name: string;
+  email: string;
+  grade: number | null;
+}
 
-const emits = defineEmits();
-
-const name = ref('');
-const email = ref('');
-const password = ref('');
+const students = ref<Student[]>([]);
 const success = ref('');
-const errors = ref('');
-const axiosInstance = axios.create();
+const error = ref('');
 
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-const handleSubmit = async () => {
+const fetchStudents = async () => {
   try {
-    const response = await axiosInstance.post(`http://localhost:3000/api/user/add-user`, {
-      name: name.value,
-      email: email.value,
-      password: password.value,
-    });
-    console.log('Réponse de l\'API :', response.data);
-    success.value = 'Administrateur ajouter avec succès.';
-  } catch (error) {
-    // Gérez les erreurs ici
-    console.error('Erreur, administrateur pas ajouté :', error);
-    errors.value = 'Erreur, administrateur pas ajouté';
-    emits('onError', errors.value);
+    const response = await axios.get<Student[]>('http://localhost:3000/api/students');
+    students.value = response.data.map(student => ({ ...student, grade: null }));
+    students.value.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Fetch grades for each student
+    await Promise.all(students.value.map(student => fetchStudentGrade(student)));
+  } catch (err) {
+    console.error('Erreur lors de la récupération des élèves:', err);
+    error.value = 'Erreur lors de la récupération des élèves.';
   }
 };
-const handleAction = (event: Event) => {
-  const selectedOption = (event.target as HTMLSelectElement).value;
-  console.log('Action sélectionnée :', selectedOption);
-  if (selectedOption) {
-    // Passez la valeur sélectionnée à la fonction redirectTo
-    redirectTo(selectedOption);
+
+const fetchStudentGrade = async (student: Student) => {
+  try {
+    const teacherId = localStorage.getItem('teacherId');
+
+    if (!teacherId) {
+      console.error('Erreur d\'authentification de l\'enseignant.');
+      return;
+    }
+
+    const responseSubject = await axios.get(`http://localhost:3000/api/teachers/${teacherId}`);
+    const subjectId = responseSubject.data.subject.id;
+
+    const responseGrade = await axios.get(`http://localhost:3000/api/grades/${student.id}/${subjectId}`);
+
+    if (responseGrade.data.error && responseGrade.data.error === 'Note non trouvée') {
+      // Set grade to null if no grade is found
+      student.grade = null;
+    } else {
+      student.grade = responseGrade.data.value;
+    }
+  } catch (err) {
+    console.error('Erreur lors de la récupération de la note :', err);
   }
 };
+
+onMounted(() => {
+  fetchStudents();
+});
 </script>
 
 <template>
@@ -53,45 +63,25 @@ const handleAction = (event: Event) => {
       <table>
         <thead>
           <tr>
-            <td>
-              Noms de l'élève
-            </td>
-            <td>
-              Notes
-            </td>
+            <th>Nom de l'élève</th>
+            <th>Adresse mail</th>
+            <th>Note</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="teacher in teachers">
-            <td>{{ teacher }}</td>
-            <td>{{ teacher }}</td>
+          <tr v-for="student in students" :key="student.id">
+            <td>{{ student.name }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.grade }}</td>
           </tr>
         </tbody>
       </table>
+      <div v-if="success" class="success">{{ success }}</div>
+      <div v-if="error" class="error">{{ error }}</div>
     </div>
   </div>
 </template>
 
 <style scoped>
-img{
-  width: 50px; 
-  height: auto; 
-}
-.icon{
-  width: 50px; 
-  height: auto; 
-}
-.logo{
-    font-style: italic;
-}
-.user-info{
-    text-align: right;
-    padding-top: 13px;
-    font-size: 15px; 
-}
-a {
-  text-decoration: none; 
-  color: white;          
-  cursor: pointer;       
-}
 </style>
+s

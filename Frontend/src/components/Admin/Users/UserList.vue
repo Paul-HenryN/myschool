@@ -32,6 +32,10 @@ onMounted(async () => {
   try {
     const response = await axiosInstance.get(`http://localhost:3000/api/users`);
     admins.value = response.data;
+
+    // Tri des administrateurs par nom
+    admins.value.sort((a, b) => a.name.localeCompare(b.name));
+
     console.log('Réponse de l\'API :', response.data);
   } catch (error) {
     // Gérez les erreurs ici

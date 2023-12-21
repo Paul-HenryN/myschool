@@ -18,7 +18,7 @@ const handleAction = (event: Event) => {
         <div class="row">
           <div class="col-md-6 logo">
             <img src="@/assets/static/MY SCHOOL.png" alt="Logo MySchool" />
-            Enseignant
+            Eleve
           </div>
           <div class="col-md-6 user-info">
             Bienvenu dans votre espace
@@ -27,10 +27,8 @@ const handleAction = (event: Event) => {
       </div>
       <div class="second-bar">
         <select class="button" @change="handleAction">
-          <option value="" disabled selected> Gérer les élèves</option>
-          <option value="addNot">Noter les élèves</option>
-          <option value="modNot">Modifier une note</option>
-          <option value="list">Liste des élèves</option>
+          <option value="" disabled selected> Consulter vos notes</option>
+          <option value="notes">Consulter vos notes</option>
         </select>
       </div>
     </header>  

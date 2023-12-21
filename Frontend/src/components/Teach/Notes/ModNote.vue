@@ -1,89 +1,95 @@
 <script setup lang="ts">
-import { redirectTo } from '@/main';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { ref, defineProps, defineEmits } from 'vue';
 
+interface Student {
+  id: number;
+  name: string;
+  grade: number | null;
+}
 
-const emits = defineEmits();
-
-const students = ref('');
+const students = ref<Student[]>([]);
 const success = ref('');
-const errors = ref('');
-const axiosInstance = axios.create();
+const error = ref('');
 
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-const handleSubmit = async () => {
+const fetchStudents = async () => {
   try {
-    // const response = await axiosInstance.put(`http://localhost:3000/api/user/${encodeURIComponent(email.value)}`, {
-    //   password: password.value,
-    // });
-    console.log('Réponse de l\'API :', response.data);
-    success.value = 'Mot de passe mis à jour avec succès.';
-  } catch (error) {
-    // Gérez les erreurs ici
-    console.error('Erreur lors de la mise à jour du mot de passe :', error);
-    errors.value = 'Erreur lors de la mise à jour du mot de passe';
+    const response = await axios.get<Student[]>('http://localhost:3000/api/students');
+    students.value = response.data.map(student => ({ ...student, grade: null }));
+  } catch (err) {
+    console.error('Erreur lors de la récupération des élèves:', err);
+    error.value = 'Erreur lors de la récupération des élèves.';
   }
 };
-const handleAction = (event: Event) => {
-  const selectedOption = (event.target as HTMLSelectElement).value;
-  console.log('Action sélectionnée :', selectedOption);
-  if (selectedOption) {
-    redirectTo(selectedOption);
+
+const handleUpdate = async (studentId: number, grade: number | null) => {
+  try {
+    if (grade === null || isNaN(grade) || grade < 0 || grade > 20) {
+      error.value = 'Veuillez saisir une note valide.';
+      return;
+    }
+
+    const teacherId = localStorage.getItem('teacherId');
+
+    if (!teacherId) {
+      error.value = 'Erreur d\'authentification de l\'enseignant.';
+      return;
+    }
+
+    const responseSubject = await axios.get(`http://localhost:3000/api/teachers/${teacherId}`);
+    const subjectId = responseSubject.data.subject.id;
+
+    const data = {
+      studentId,
+      subjectId,
+      value: grade,
+    };
+
+    const response = await axios.put(`http://localhost:3000/api/grades/${studentId}/${subjectId}`, data);
+
+    success.value = 'Note mise à jour avec succès.';
+  } catch (err) {
+    console.error('Erreur lors de la mise à jour de la note :', err);
+    error.value = 'Erreur lors de la mise à jour de la note.';
   }
 };
+
+onMounted(() => {
+  fetchStudents();
+});
 </script>
 
 <template>
   <div class="mytext">
-    <div class=" text container">
-      <form @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="name">Selectionner le nom de l'élève :</label>
-          <select name="name" class="button" v-model="email" required>
-            <option value="france">Paul Henri</option>
-          </select>
-          <!-- <select name="name" class="button" v-model="email" required v-for="student in students">
-            <option value="france">{{ student }}</option>
-          </select> -->
-        </div>
-        <div class="form-group">
-            <label for="password">Nouvelle note :</label>
-            <input class="input" type="text" id="note" v-model="password" required />
-        </div>
-        <div class="form-group">
-            <label for="password">Confirmez la note :</label>
-            <input class="input" type="text" id="not" v-model="password" required />
-        </div>
-
-        <div class="form-group">
-          <div class="button">
-            <button type="submit">Valider</button>
-          </div>
-        </div>
-        <div v-if="success" class="success">{{ success }}</div>
-        <div v-if="errors" class="error">{{ errors }}</div>
-      </form>
+    <div class="text container">
+      <table>
+        <thead>
+          <tr>
+            <th>Nom de l'élève</th>
+            <th>Note</th>
+            <th>Enregistrer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="student in students" :key="student.id">
+            <td>{{ student.name }}</td>
+            <td>
+              <input type="number" v-model="student.grade" step="0.1" min="0" max="20" />
+            </td>
+            <td>
+              <button @click="handleUpdate(student.id, student.grade)">
+                Enregistrer
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div v-if="success" class="success">{{ success }}</div>
+      <div v-if="error" class="error">{{ error }}</div>
     </div>
-    
   </div>
-  
 </template>
 
 <style scoped>
-img{
-  width: 50px; 
-  height: auto; 
-}
-.icon{
-  width: 50px; 
-  height: auto; 
-}
+/* Ajoutez vos styles CSS ici */
 </style>

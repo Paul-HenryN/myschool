@@ -21,15 +21,9 @@ Projet renforcement full js
 - Gère les utilisateurs (étudiants et enseignants)
 - Créer des identifiants pour chaque utilisateur
 - Identifiant de l'admin par défaut juste besoin de son mail et mots de passe pour la connexion
+
 {
   "name": "Administrateur",
   "email": "administrateur@myschool.net",
   "password": "AdminSecretPassword1234"
-}
-
-
-{
-  "name": "TeacherTest",
-  "email": "teachertest@myschool.net",
-  "password": "teacherSecretPassword1234"
 }

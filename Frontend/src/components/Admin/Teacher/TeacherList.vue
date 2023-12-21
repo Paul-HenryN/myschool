@@ -3,10 +3,20 @@ import { redirectTo } from '@/main';
 import axios from 'axios';
 import { ref, defineProps, defineEmits, onMounted } from 'vue';
 
+interface Teachers {
+  id: number;
+  name: string;
+  email: string;
+  subject: {
+    id: number;
+    name: string;
+    coefficient: number;
+  };
+}
 
 const emits = defineEmits();
 
-const teachers = ref([]);
+const teachers = ref<Teachers[]>([]);
 
 const errors = ref('');
 const axiosInstance = axios.create();
@@ -21,8 +31,9 @@ axiosInstance.interceptors.request.use((config) => {
 
 onMounted(async () => {
   try {
-    const response = await axiosInstance.get(`http://localhost:3000/api/teacher`);
+    const response = await axiosInstance.get(`http://localhost:3000/api/teachers`);
     teachers.value = response.data;
+    teachers.value.sort((a, b) => a.name.localeCompare(b.name));
     console.log('Réponse de l\'API :', response.data);
   } catch (error) {
     // Gérez les erreurs ici
@@ -31,14 +42,6 @@ onMounted(async () => {
     emits('onError', errors.value);
   }
 });
-const handleAction = (event: Event) => {
-  const selectedOption = (event.target as HTMLSelectElement).value;
-  console.log('Action sélectionnée :', selectedOption);
-  if (selectedOption) {
-    // Passez la valeur sélectionnée à la fonction redirectTo
-    redirectTo(selectedOption);
-  }
-};
 </script>
 
 <template>
@@ -47,12 +50,18 @@ const handleAction = (event: Event) => {
       <table>
         <thead>
           <tr>
+            <th>Noms des enseignants</th>
             <th>Adresse mails des enseignants</th>
+            <th>Matière enseignée</th>
+            <th>Coefficient de la matière</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="teacher in teachers">
-            <td>{{ teacher }} </td>
+            <td>{{ teacher.name }} </td>
+            <td>{{ teacher.email }} </td>
+            <td>{{ teacher.subject.name }} </td>
+            <td>{{ teacher.subject.coefficient }} </td>
           </tr>
         </tbody>
       </table>

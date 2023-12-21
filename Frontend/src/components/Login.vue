@@ -4,11 +4,13 @@ import { ref, defineProps, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
 
 
-const props = defineProps(['onLogin']);
 const emits = defineEmits();
 
 const email = ref('');
 const password = ref('');
+
+const role = ref('');
+
 const router = useRouter();
 
 const errors = ref('');
@@ -28,11 +30,25 @@ const handleSubmit = async () => {
       email: email.value,
       password: password.value,
     });
+
     const token = response.data.token;
+    role.value = response.data.user.role.name;
+
     console.log('Réponse de l\'API :', response.data);
     localStorage.setItem('token', token);
-    console.log('Redirection vers /admin');
-    router.push('/admin');
+    
+    if (role.value === 'admin'){
+      router.push('/admin');
+    } else if (role.value === 'teacher'){
+      const teacherId = response.data.user.id;
+      localStorage.setItem('teacherId', teacherId);
+      router.push('/enseignant');
+    }else if (role.value === 'student'){
+      const studentId = response.data.user.id;
+      localStorage.setItem('studentId', studentId);
+      router.push('/eleve');
+    }
+
     emits('onLogin', response.data);
     return;
   } catch (error) {
